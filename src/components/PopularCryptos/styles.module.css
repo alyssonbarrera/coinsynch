@@ -1,0 +1,43 @@
+.popularCryptosContainer {
+  max-width: 360px;
+
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.popularCryptosSlide {
+  display: inline-flex;
+  gap: 24px;
+
+  animation: 15s slide infinite linear;
+}
+
+.popularCryptosSlideItem {
+  width: max-content;
+
+  display: inline-flex;
+  gap: 8px;
+}
+
+.popularCryptosSlideItem:first-child {
+  padding-left: 24px;
+}
+
+.popularCryptosContainer:hover .popularCryptosSlide {
+  animation-play-state: paused;
+}
+
+@keyframes slide {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-100%, 0, 0);
+  }
+}
+
+@media (max-width: 768px) {
+  .popularCryptosContainer {
+    max-width: 100%;
+  }
+}
