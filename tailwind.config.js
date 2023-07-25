@@ -19,6 +19,15 @@ module.exports = {
         body: '1rem', // 16px
         label: '0.875rem', // 14px
         'small-label': '0.75rem', // 12px
+
+        '5xl': '3rem', // 48px
+        '4xl': '2.5rem', // 40px
+        '3xl': '2rem', // 32px
+        '2xl': '1.5rem', // 24px
+        xl: '1.25rem', // 20px
+        md: '1rem', // 16px
+        sm: '0.875rem', // 14px
+        xs: '0.75rem', // 12px
       },
       fontFamily: {
         base: ['Roboto', 'sans-serif'],
@@ -32,6 +41,15 @@ module.exports = {
         body: '1.5rem', // 24px
         label: '1rem', // 16px
         'small-label': '0.875rem', // 14px
+
+        '5xl': '3rem', // 48px
+        '4xl': '2.5rem', // 40px
+        '3xl': '2rem', // 32px
+        '2xl': '1.5rem', // 24px
+        xl: '1.25rem', // 20px
+        md: '1rem', // 16px
+        sm: '0.875rem', // 14px
+        xs: '0.75rem', // 12px
       },
       letterSpacing: {
         h1: '-0.0625rem', // -1px
@@ -129,6 +147,8 @@ module.exports = {
       },
       backgroundImage: {
         'home-wave': "url('../assets/shapes/wave.svg')",
+        'home-section-two':
+          'linear-gradient(180deg, rgba(255, 255, 255, 0.00) 0%, #F7F7F7 100%)',
       },
     },
   },

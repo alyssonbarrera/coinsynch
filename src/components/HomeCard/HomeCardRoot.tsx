@@ -10,7 +10,7 @@ export function HomeCardRoot({ children, ...props }: HomeCardRootProps) {
     <article
       {...props}
       className={twMerge(
-        'inline-flex h-[16.25rem] min-w-[12.5rem] flex-col items-start gap-4 rounded-md bg-white p-6 shadow-home-card md:min-h-[16.75rem] md:min-w-[17.5rem]',
+        'home-carddd inline-flex h-[16.25rem] w-[12.5rem] flex-col items-start gap-4 rounded-md bg-white p-6 shadow-home-card md:min-h-[16.75rem] md:min-w-[17.5rem]',
         props.className,
       )}
     >

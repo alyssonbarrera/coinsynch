@@ -10,7 +10,7 @@ export function TextTagContent({ children, ...props }: TextTagContentProps) {
     <span
       {...props}
       className={twMerge(
-        'text-small-label leading-small-label text-primary-500 md:text-body md:leading-body xl:text-h5 xl:leading-8',
+        'text-xs leading-sm text-primary-500 md:text-md md:leading-2xl xl:text-xl xl:leading-8',
         props.className,
       )}
     >

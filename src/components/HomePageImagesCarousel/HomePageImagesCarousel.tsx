@@ -13,7 +13,6 @@ import womanImage from '@/assets/images/woman-image.png'
 import devicesIcon from '@/assets/icons/devices-icon.svg'
 import womanPbImage from '@/assets/images/woman-pb-image.png'
 
-import 'swiper/css'
 import 'swiper/css/free-mode'
 
 export function HomePageImagesCarousel() {

@@ -5,6 +5,7 @@ import { ClipLoader } from 'react-spinners'
 
 import { Button } from '@/components/Button'
 import { TextTag } from '@/components/TextTag'
+import { Highlight } from '@/components/Highlight'
 import { PageFooter } from '@/components/PageFooter'
 import { HomeNavbar } from '@/components/HomeNavbar'
 import { ArrowRight } from '@/components/ArrowRight'
@@ -32,6 +33,36 @@ const HomePageImagesCarousel = dynamic(
   },
 )
 
+const HomePageInfoCardsCarousel = dynamic(
+  () =>
+    import('@/components/HomePageInfoCardsCarousel').then(
+      (mod) => mod.HomePageInfoCardsCarousel,
+    ),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="mx-auto hidden md:block">
+        <ClipLoader color="#FBAB34" size={50} />
+      </div>
+    ),
+  },
+)
+
+const HomePageInfoCardWrapper = dynamic(
+  () =>
+    import('@/components/HomePageInfoCardWrapper').then(
+      (mod) => mod.HomePageInfoCardWrapper,
+    ),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="mx-auto hidden md:block">
+        <ClipLoader color="#FBAB34" size={50} />
+      </div>
+    ),
+  },
+)
+
 type HomeProps = {
   popularCryptos: CoinDTO[]
   exchangeRate: ExchangeRateDTO
@@ -39,7 +70,7 @@ type HomeProps = {
 }
 
 export default function Home({ popularCryptos, exchangeRate }: HomeProps) {
-  const { isAbove768 } = useBreakpoint()
+  const { isAbove768, isBelow768 } = useBreakpoint()
 
   return (
     <>
@@ -52,7 +83,7 @@ export default function Home({ popularCryptos, exchangeRate }: HomeProps) {
           exchangeRateData={exchangeRate}
         />
       </header>
-      <main className="mx-auto flex max-w-[2560px] items-center justify-center px-6 pt-14 font-base font-base md:justify-between md:pr-0 md:pt-[3.875rem] xl:pb-14 xl:pl-28 xl:pt-[6.25rem] 5xl:pl-0">
+      <main className="mx-auto flex max-w-[2560px] items-center justify-center px-6 pt-14 font-base md:justify-between md:pr-0 md:pt-[3.875rem] xl:pb-14 xl:pl-28 xl:pt-[6.25rem] 5xl:pl-0">
         <section className="pr-0 md:pr-5">
           <div className="mx-auto flex max-w-[36.875rem] flex-col gap-2 text-center md:mx-0 md:gap-4 md:text-left xl:gap-6">
             <p className="text-h5 font-bold leading-h5 text-primary-500 md:text-h3 md:leading-h3 xl:text-h1 xl:leading-h1 xl:-tracking-h1">
@@ -86,7 +117,37 @@ export default function Home({ popularCryptos, exchangeRate }: HomeProps) {
         </section>
         {isAbove768 && <HomePageImagesCarousel />}
       </main>
+
       <div className="h-[15.4375rem] w-full bg-home-wave bg-cover bg-top bg-no-repeat" />
+
+      <section className="bg-home-section-two pt-14 font-base md:space-y-10 md:px-12 md:py-20 xl:flex xl:flex-row-reverse xl:items-center xl:justify-between xl:pb-[8.125rem] xl:pl-28 xl:pt-[7.5rem]">
+        <div className="px-6 md:mx-auto md:mb-4 md:max-w-[30.875rem] md:px-0 xl:mx-0 xl:mb-0 xl:ml-8 xl:mr-28 xl:max-w-[25.5rem]">
+          <Highlight.Root>
+            <Highlight.SubHeading
+              as="h5"
+              text="Lorem ipsum"
+              className="mb-1 text-md xl:text-xl xl:leading-3xl"
+            />
+            <Highlight.Heading
+              as="h4"
+              text="Lorem ipsum"
+              className="mb-4 text-2xl leading-3xl md:text-3xl md:leading-4xl xl:text-4xl xl:leading-5xl xl:-tracking-tight"
+            />
+            <Highlight.Description
+              text="Lorem ipsum dolor sit amet, consectetur adipiscing elit ut aliquam, purus sit amet luctus venenatis, lectus magna fringilla urna, porttitor"
+              className="md:text-md md:leading-2xl"
+            />
+          </Highlight.Root>
+
+          <Button.Root className="mx-auto mt-10 hidden h-12 max-w-[11rem] md:mx-0 xl:block">
+            <Button.Content className="font-normal">Sign up now</Button.Content>
+          </Button.Root>
+        </div>
+
+        {isBelow768 && <HomePageInfoCardsCarousel />}
+        {isAbove768 && <HomePageInfoCardWrapper />}
+      </section>
+
       <PageFooter.Root className="flex justify-center md:justify-between md:px-12 xl:px-28">
         <PageFooter.Content className="hidden md:block">
           Copyright © 2022 - All rights reserved

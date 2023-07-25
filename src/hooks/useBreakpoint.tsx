@@ -13,7 +13,7 @@ export function useBreakpoint(): BreakpointProps {
   useEffect(() => {
     function handleResize() {
       setIsAbove768(window.innerWidth >= 768)
-      setIsBelow768(window.innerWidth <= 768)
+      setIsBelow768(window.innerWidth < 768)
     }
 
     const debouncedHandleResize = debounce(handleResize, 200)

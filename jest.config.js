@@ -3,6 +3,7 @@ module.exports = {
   setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
   transform: {
     '^.+\\.(js|jsx|ts|tsx)$': '<rootDir>/node_modules/babel-jest',
+    '^.+\\.svg$': '<rootDir>/src/tests/svg-transformer.js',
   },
   testEnvironment: 'jest-environment-jsdom',
   moduleNameMapper: {
@@ -18,4 +19,5 @@ module.exports = {
     '!src/**/_document.tsx',
   ],
   coverageReporters: ['lcov', 'json'],
+  silent: true,
 }
