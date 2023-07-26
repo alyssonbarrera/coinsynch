@@ -74,12 +74,12 @@ export function HomeNavbar({
       </div>
       <div className="hidden items-center gap-2 pr-4 md:flex md:pr-12 xl:pr-28 5xl:pr-0">
         <Button.Root className="h-8 min-w-[6.25rem] max-w-[6.25rem] bg-transparent hover:bg-gray-50 hover:transition-colors">
-          <Button.Content className="leading-base text-sm text-color-base">
+          <Button.Content className="xl:leading text-sm leading-4 text-color-base md:text-sm xl:leading-md">
             Sign In
           </Button.Content>
         </Button.Root>
         <Button.Root className="h-8 min-w-[6.25rem] max-w-[6.25rem] flex-grow-0">
-          <Button.Content className="leading-base text-sm text-white">
+          <Button.Content className="text-sm leading-4 text-white md:text-sm xl:text-sm xl:leading-md">
             Sign Up
           </Button.Content>
         </Button.Root>

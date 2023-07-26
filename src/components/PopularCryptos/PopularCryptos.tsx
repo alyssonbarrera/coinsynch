@@ -21,7 +21,7 @@ export function PopularCryptos({
   return (
     <div
       data-testid="PopularCryptos"
-      className={`font-base uppercase ${styles.popularCryptosContainer} md:leading-base text-small-label leading-small-label md:text-sm md:tracking-normal`}
+      className={`font-base uppercase ${styles.popularCryptosContainer} text-small-label leading-small-label md:text-xs md:leading-sm md:tracking-normal`}
     >
       <div className={styles.popularCryptosSlide}>
         {popularCryptos?.map((crypto) => (

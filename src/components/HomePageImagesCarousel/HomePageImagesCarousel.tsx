@@ -8,7 +8,7 @@ import { IconTag } from '@/components/IconTag'
 import manImage from '@/assets/images/man-image.png'
 import chartIcon from '@/assets/icons/chart-icon.svg'
 import cryptoIcon from '@/assets/icons/crypto-icon.svg'
-import bitconIcon from '@/assets/icons/bitcoin-icon.svg'
+import bitcoinIcon from '@/assets/icons/bitcoin-icon.svg'
 import womanImage from '@/assets/images/woman-image.png'
 import devicesIcon from '@/assets/icons/devices-icon.svg'
 import womanPbImage from '@/assets/images/woman-pb-image.png'
@@ -46,7 +46,7 @@ export function HomePageImagesCarousel() {
             loading="lazy"
           />
           <IconTag.Root className="absolute md:-left-5 md:top-12 md:h-11 md:w-11 xl:-left-10 xl:top-20 xl:h-20 xl:w-20">
-            <IconTag.Content src={bitconIcon} alt="bitcoin icon" />
+            <IconTag.Content src={bitcoinIcon} alt="bitcoin icon" />
           </IconTag.Root>
           <IconTag.Root className="absolute md:-right-5 md:bottom-14 md:h-11 md:w-11 xl:-right-10 xl:bottom-24 xl:h-20 xl:w-20">
             <IconTag.Content src={chartIcon} alt="bitcoin icon" />
@@ -82,7 +82,7 @@ export function HomePageImagesCarousel() {
             loading="lazy"
           />
           <IconTag.Root className="absolute md:-left-5 md:bottom-11 md:h-11 md:w-11 xl:-left-10 xl:bottom-20 xl:h-20 xl:w-20">
-            <IconTag.Content src={bitconIcon} alt="bitcoin icon" />
+            <IconTag.Content src={bitcoinIcon} alt="bitcoin icon" />
           </IconTag.Root>
           <IconTag.Root className="absolute md:-right-5 md:bottom-24 md:h-11 md:w-11 xl:-right-10 xl:bottom-[11.4375rem] xl:h-20 xl:w-20">
             <IconTag.Content src={chartIcon} alt="bitcoin icon" />
