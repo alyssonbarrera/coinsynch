@@ -1,7 +1,7 @@
-import { ElementType, HTMLAttributes } from 'react'
+import { HTMLAttributes, ElementType } from 'react'
 import { twMerge } from 'tailwind-merge'
 
-type HighlightSubHeadingProps = HTMLAttributes<HTMLHeadingElement> & {
+type HighlightSubHeadingProps = HTMLAttributes<ElementType> & {
   text: string
   as?: ElementType
 }
@@ -15,7 +15,7 @@ export function HighlightSubHeading({
     <Element
       {...props}
       className={twMerge(
-        'text-sm font-bold leading-4 text-primary-500 md:text-base md:leading-6',
+        'text-base font-bold text-primary-500',
         props.className,
       )}
     >

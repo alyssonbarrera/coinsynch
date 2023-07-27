@@ -5,9 +5,9 @@ import {
   formatCurrencyPriceWithSpace,
   formatPercentage,
 } from '@/utils/currencyUtils'
-import { ComponentPropsWithoutRef, ReactNode, forwardRef } from 'react'
+import { ReactNode, forwardRef } from 'react'
 
-type AccordionContentProps = ComponentPropsWithoutRef<'div'> & {
+type AccordionContentProps = {
   children?: ReactNode
   className?: string
   price?: number

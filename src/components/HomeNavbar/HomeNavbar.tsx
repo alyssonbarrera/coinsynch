@@ -1,6 +1,6 @@
 import dynamic from 'next/dynamic'
 import { Link } from 'react-scroll'
-import { HTMLAttributes } from 'react'
+import { ComponentProps } from 'react'
 
 import { Logo } from '@/components/Logo'
 import { Button } from '@/components/Button'
@@ -23,7 +23,7 @@ const DropdownMenu = dynamic(
   },
 )
 
-type HomeNavbarProps = HTMLAttributes<HTMLElement> & {
+type HomeNavbarProps = ComponentProps<'nav'> & {
   popularCryptosData: CoinDTO[]
   exchangeRateData: ExchangeRateDTO
 }
@@ -48,7 +48,7 @@ export function HomeNavbar({
               to="about"
               smooth={true}
               duration={500}
-              className="cursor-pointer text-label leading-label text-color-base"
+              className="cursor-pointer text-xs leading-sm text-color-base"
             >
               About us
             </Link>
@@ -58,7 +58,7 @@ export function HomeNavbar({
               to="top-cryptos"
               smooth={true}
               duration={500}
-              className="cursor-pointer text-label leading-label text-color-base"
+              className="cursor-pointer text-xs leading-sm text-color-base"
             >
               Top Cryptos
             </Link>

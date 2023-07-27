@@ -1,7 +1,7 @@
-import { HTMLAttributes, ReactNode } from 'react'
+import { ComponentProps, ReactNode } from 'react'
 import { twMerge } from 'tailwind-merge'
 
-export type PageFooterRootProps = HTMLAttributes<HTMLElement> & {
+export type PageFooterRootProps = ComponentProps<'footer'> & {
   children: ReactNode
 }
 

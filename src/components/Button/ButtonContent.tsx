@@ -1,7 +1,7 @@
 import { twMerge } from 'tailwind-merge'
-import { HTMLAttributes, ReactNode } from 'react'
+import { ComponentProps, ReactNode } from 'react'
 
-export type ButtonContentProps = HTMLAttributes<HTMLParagraphElement> & {
+export type ButtonContentProps = ComponentProps<'span'> & {
   children: ReactNode
 }
 
@@ -9,7 +9,10 @@ export function ButtonContent({ children, ...props }: ButtonContentProps) {
   return (
     <span
       {...props}
-      className={twMerge('text-sm text-white md:text-base', props.className)}
+      className={twMerge(
+        'text-sm leading-4 text-white md:text-base',
+        props.className,
+      )}
     >
       {children}
     </span>

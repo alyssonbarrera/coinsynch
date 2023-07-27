@@ -1,7 +1,7 @@
 import { twMerge } from 'tailwind-merge'
-import { HtmlHTMLAttributes, ReactNode } from 'react'
+import { ComponentProps, ReactNode } from 'react'
 
-type TextTagRootProps = HtmlHTMLAttributes<HTMLDivElement> & {
+type TextTagRootProps = ComponentProps<'div'> & {
   children: ReactNode
 }
 

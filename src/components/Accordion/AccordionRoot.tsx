@@ -1,8 +1,8 @@
 import { twMerge } from 'tailwind-merge'
-import { HTMLAttributes, ReactNode, useState } from 'react'
+import { ReactNode, useState, ComponentProps } from 'react'
 import * as Accordion from '@radix-ui/react-accordion'
 
-type AccordionRootProps = HTMLAttributes<HTMLDivElement> & {
+type AccordionRootProps = ComponentProps<'div'> & {
   children: ReactNode
 }
 

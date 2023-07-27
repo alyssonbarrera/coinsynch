@@ -1,19 +1,19 @@
 import { ComponentProps, ReactNode } from 'react'
 import { twMerge } from 'tailwind-merge'
 
-export type PageFooterContentProps = ComponentProps<'p'> & {
-  children: ReactNode
+type FormErrorMessageProps = ComponentProps<'p'> & {
+  children: string | ReactNode
 }
 
-export function PageFooterContent({
+export function FormErrorMessage({
   children,
   ...props
-}: PageFooterContentProps) {
+}: FormErrorMessageProps) {
   return (
     <p
       {...props}
       className={twMerge(
-        'text-label leading-label text-color-base',
+        '-mt-2 block text-sm leading-4 text-quaternary-600',
         props.className,
       )}
     >

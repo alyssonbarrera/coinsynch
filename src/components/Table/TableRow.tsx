@@ -1,7 +1,7 @@
-import { HTMLAttributes, ReactNode } from 'react'
+import { ComponentProps, ReactNode } from 'react'
 import { twMerge } from 'tailwind-merge'
 
-type TableTrProps = HTMLAttributes<HTMLTableRowElement> & {
+type TableTrProps = ComponentProps<'tr'> & {
   children: ReactNode
 }
 

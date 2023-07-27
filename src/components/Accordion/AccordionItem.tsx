@@ -1,10 +1,10 @@
-import { forwardRef } from 'react'
 import classNames from 'classnames'
+import { ReactNode, forwardRef } from 'react'
 import * as Accordion from '@radix-ui/react-accordion'
 
 type AccordionItemProps = {
   value: string
-  children: React.ReactNode
+  children: ReactNode
   className?: string
 }
 

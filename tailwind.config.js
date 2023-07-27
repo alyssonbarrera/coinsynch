@@ -11,15 +11,6 @@ module.exports = {
         '5xl': '2560px',
       },
       fontSize: {
-        h1: '3rem', // 48px
-        h2: '2.5rem', // 40px
-        h3: '2rem', // 32px
-        h4: '1.5rem', // 24px
-        h5: '1.25rem', // 20px
-        body: '1rem', // 16px
-        label: '0.875rem', // 14px
-        'small-label': '0.75rem', // 12px
-
         '5xl': '3rem', // 48px
         '4xl': '2.5rem', // 40px
         '3xl': '2rem', // 32px
@@ -33,15 +24,7 @@ module.exports = {
         base: ['Roboto', 'sans-serif'],
       },
       lineHeight: {
-        h1: '3.5rem', // 56px
-        h2: '3rem', // 48px
-        h3: '2.5rem', // 40px
-        h4: '2rem', // 32px
-        h5: '1.5rem', // 24px
-        body: '1.5rem', // 24px
-        label: '1rem', // 16px
-        'small-label': '0.875rem', // 14px
-
+        '6xl': '3.5rem', // 56px
         '5xl': '3rem', // 48px
         '4xl': '2.5rem', // 40px
         '3xl': '2rem', // 32px
@@ -52,14 +35,7 @@ module.exports = {
         xs: '0.75rem', // 12px
       },
       letterSpacing: {
-        h1: '-0.0625rem', // -1px
-        h2: '-0.0625rem', // -1px
-        h3: '0px',
-        h4: '0px',
-        h5: '0px',
-        body: '0px',
-        label: '0px',
-        'small-label': '0px',
+        px: '0.0625rem', // 1px
       },
       colors: {
         primary: {
@@ -112,6 +88,8 @@ module.exports = {
         'icon-tag': '0px 8px 16px 0px rgba(0, 0, 0, 0.15)',
         'home-card': '0px 12px 24px 0px rgba(0, 0, 0, 0.05)',
         'home-nav': '0px 4px 8px 0px rgba(77, 77, 77, 0.10)',
+        'input-shadow': '0px 12px 24px 0px rgba(0, 0, 0, 0.10)',
+        'button-shadow': '0px 12px 24px 0px rgba(0, 0, 0, 0.10)',
       },
       gridTemplateColumns: {
         'home-nav-xl': '1fr 1fr minmax(0, 320px)',
@@ -156,9 +134,11 @@ module.exports = {
         slideUp: 'slideUp 300ms cubic-bezier(0.87, 0, 0.13, 1)',
       },
       backgroundImage: {
-        'home-wave': "url('../assets/shapes/wave.svg')",
+        'home-wave-one': "url('../assets/shapes/wave-one.png')",
         'home-section-two':
           'linear-gradient(180deg, rgba(255, 255, 255, 0.00) 0%, #F7F7F7 100%)',
+        'home-wave-two': "url('../assets/shapes/wave-two.png')",
+        'home-footer': 'linear-gradient(138deg, #FBAB34 0%, #AD721A 100%)',
       },
     },
   },

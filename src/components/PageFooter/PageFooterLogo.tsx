@@ -1,7 +1,7 @@
-import { HTMLAttributes } from 'react'
-import { Logo } from '../Logo'
+import { ComponentProps } from 'react'
+import { Logo } from '@/components/Logo'
 
-export type PageFooterLogoProps = HTMLAttributes<SVGElement> & {
+export type PageFooterLogoProps = ComponentProps<'svg'> & {
   size?: number
 }
 

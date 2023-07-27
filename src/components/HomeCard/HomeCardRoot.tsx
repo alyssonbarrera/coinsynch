@@ -1,7 +1,7 @@
-import { HTMLAttributes, ReactNode } from 'react'
+import { ComponentProps, ReactNode } from 'react'
 import { twMerge } from 'tailwind-merge'
 
-export type HomeCardRootProps = HTMLAttributes<HTMLElement> & {
+export type HomeCardRootProps = ComponentProps<'article'> & {
   children: ReactNode
 }
 

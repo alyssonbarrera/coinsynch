@@ -1,6 +1,6 @@
-import { HTMLAttributes } from 'react'
+import { ComponentProps } from 'react'
 
-export type LogoProps = HTMLAttributes<SVGElement> & {
+export type LogoProps = ComponentProps<'svg'> & {
   size?: number
 }
 

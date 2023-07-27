@@ -1,7 +1,7 @@
-import { HTMLAttributes, ReactNode } from 'react'
+import { ComponentProps, ElementType, ReactNode } from 'react'
 import { twMerge } from 'tailwind-merge'
 
-type HighlightRootProps = HTMLAttributes<HTMLElement> & {
+type HighlightRootProps = ComponentProps<ElementType> & {
   children: ReactNode
 }
 

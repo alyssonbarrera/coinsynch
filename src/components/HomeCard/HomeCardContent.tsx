@@ -13,9 +13,18 @@ export function HomeCardContent({
 }: HomeCardContentProps) {
   return (
     <Highlight.Root>
-      <Highlight.SubHeading text={subheading} className="mb-1" />
-      <Highlight.Heading text={heading} className="mb-2" />
-      <Highlight.Description text={description} className="max-w-[14.5rem]" />
+      <Highlight.SubHeading
+        text={subheading}
+        className="mb-1 text-sm leading-4 md:text-base"
+      />
+      <Highlight.Heading
+        text={heading}
+        className="mb-2 text-xl leading-8 md:text-2xl md:leading-8"
+      />
+      <Highlight.Description
+        text={description}
+        className="max-w-[14.5rem] text-sm leading-6"
+      />
     </Highlight.Root>
   )
 }

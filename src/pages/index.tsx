@@ -1,9 +1,15 @@
 import Head from 'next/head'
+import { z } from 'zod'
+import { useState } from 'react'
 import dynamic from 'next/dynamic'
-import Image from 'next/image'
 import { GetServerSideProps } from 'next'
 import { ClipLoader } from 'react-spinners'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { Controller, useForm, SubmitHandler } from 'react-hook-form'
 
+import { Plus } from '@/components/Plus'
+import { Form } from '@/components/Form'
+import { Input } from '@/components/Input'
 import { Button } from '@/components/Button'
 import { TextTag } from '@/components/TextTag'
 import { Highlight } from '@/components/Highlight'
@@ -18,16 +24,7 @@ import { CoinDTO } from '@/dtos/CoinDTO'
 import { ExchangeRateDTO } from '@/dtos/ExchangeRateDTO'
 
 import { useBreakpoint } from '@/hooks/useBreakpoint'
-import { Accordion } from '@/components/Accordion'
-
-import { useState } from 'react'
-import { Plus } from '@/components/Plus'
-import { Table } from '@/components/Table'
-import {
-  formatCurrencyPriceWithSpace,
-  formatPercentage,
-} from '@/utils/currencyUtils'
-import classNames from 'classnames'
+import { userValidations } from '@/validations/userValidations'
 
 const HomePageImagesCarousel = dynamic(
   () =>
@@ -110,6 +107,10 @@ type HomeProps = {
   error?: boolean
 }
 
+const subscribeFormSchema = userValidations.schemas.subscribe
+
+type SubscribeFormSchema = z.infer<typeof subscribeFormSchema>
+
 export default function Home({ popularCryptos, exchangeRate }: HomeProps) {
   const { isAbove768, isBelow768 } = useBreakpoint()
   const [numberOfResults, setNumberOfResults] = useState(4)
@@ -118,6 +119,20 @@ export default function Home({ popularCryptos, exchangeRate }: HomeProps) {
 
   if (popularCryptosCopy.length > numberOfResults) {
     popularCryptosCopy = popularCryptosCopy.slice(0, numberOfResults)
+  }
+
+  const {
+    control,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<SubscribeFormSchema>({
+    resolver: zodResolver(subscribeFormSchema),
+  })
+
+  const onSubmitSubscribeForm: SubmitHandler<SubscribeFormSchema> = async (
+    data,
+  ) => {
+    console.log(data.email)
   }
 
   const handleViewPopularCryptos = () => {
@@ -141,22 +156,25 @@ export default function Home({ popularCryptos, exchangeRate }: HomeProps) {
       </header>
       <main className="mx-auto flex max-w-[2560px] items-center justify-center px-6 pt-14 font-base md:justify-between md:pr-0 md:pt-[3.875rem] xl:pb-14 xl:pl-28 xl:pt-[6.25rem] 5xl:pl-0">
         <section className="pr-0 md:pr-5">
-          <div className="mx-auto flex max-w-[36.875rem] flex-col gap-2 text-center md:mx-0 md:gap-4 md:text-left xl:gap-6">
-            <p className="text-xl font-bold leading-8 text-primary-500 md:text-h3 md:leading-h3 xl:text-h1 xl:leading-h1 xl:-tracking-h1">
+          <div className="mx-auto flex max-w-xs flex-col gap-2 text-center md:mx-0 md:gap-4 md:text-left xl:max-w-[36.875rem] xl:gap-6">
+            <p className="text-xl font-bold leading-8 text-primary-500 md:text-3xl md:leading-10 xl:text-5xl xl:leading-6xl xl:-tracking-px">
               Lorem ipsum dolor sit amet, consectetur
             </p>
-            <p className="max-w-md text-label leading-6 text-color-base md:max-w-none md:text-body xl:text-h5 xl:leading-8">
+            <p className="text-label max-w-md leading-6 text-color-base md:max-w-none md:text-base xl:text-xl xl:leading-8">
               Lorem ipsum dolor sit amet, consectetur adipiscing elit ut
               aliquam, purus sit amet luctus venenatis, lectus magna fringilla
               urna, porttitor
             </p>
           </div>
           <div className="mt-6 w-full xl:mt-8">
-            <Button.Root className="mx-auto h-8 max-w-[11.25rem] md:mx-0 md:h-12 md:max-w-[14.5rem] xl:max-w-[17.375rem]">
+            <Button.Root
+              variant="primary"
+              className="mx-auto h-8 max-w-[11.25rem] md:mx-0 md:h-12 md:max-w-[14.5rem] xl:max-w-[17.375rem]"
+            >
               <Button.Content className="text-sm font-normal uppercase leading-4 md:font-bold">
                 Sign Up Now
               </Button.Content>
-              <Button.Icon icon={ArrowRight} color="white" size={16} />
+              <Button.Icon icon={ArrowRight} />
             </Button.Root>
           </div>
           <div className="mt-6 flex justify-center gap-4 md:mt-10 md:justify-start md:gap-6 xl:mt-20 xl:gap-12">
@@ -174,7 +192,7 @@ export default function Home({ popularCryptos, exchangeRate }: HomeProps) {
         {isAbove768 && <HomePageImagesCarousel />}
       </main>
 
-      <div className="h-[15.4375rem] w-full bg-home-wave bg-cover bg-top bg-no-repeat" />
+      <div className="h-[15.4375rem] w-full bg-home-wave-one bg-cover bg-top bg-no-repeat" />
 
       <section className="bg-home-section-two pt-14 font-base md:space-y-10 md:px-12 md:py-20 xl:flex xl:flex-row-reverse xl:items-center xl:justify-between xl:pb-[8.125rem] xl:pl-28 xl:pt-[7.5rem]">
         <div className="px-6 md:mx-auto md:mb-4 md:max-w-[30.875rem] md:px-0 xl:mx-0 xl:mb-0 xl:ml-8 xl:mr-28 xl:max-w-[25.5rem]">
@@ -224,8 +242,70 @@ export default function Home({ popularCryptos, exchangeRate }: HomeProps) {
           <Button.Content className="text-md font-normal leading-6 text-primary-500">
             {numberOfResults === 4 ? 'View more' : 'View less'}
           </Button.Content>
-          {numberOfResults === 4 && <Button.Icon icon={Plus} color="white" />}
+          {numberOfResults === 4 && <Button.Icon icon={Plus} />}
         </Button.Root>
+      </section>
+
+      <section className="relative z-0 flex min-h-[432px] flex-col items-center justify-between gap-10 bg-home-footer bg-cover bg-no-repeat px-6 py-14 font-base before:absolute before:inset-0 before:-z-10 before:h-full before:bg-home-wave-two before:bg-cover before:bg-right before:bg-no-repeat md:min-h-[412px] md:flex-row md:gap-8 md:px-12 md:py-0 xl:px-[13.5rem]">
+        <div className="w-full max-w-[24.0625rem]">
+          <Highlight.Root>
+            <Highlight.SubHeading
+              text="Lorem ipsum"
+              as="h4"
+              className="mb-1 text-primary-200 md:text-xl xl:text-2xl xl:leading-8"
+            />
+            <Highlight.Heading
+              text="Lorem ipsum"
+              as="h3"
+              className="mb-4 text-2xl leading-8 text-white md:text-3xl md:leading-10 xl:text-4xl xl:leading-5xl"
+            />
+            <Highlight.Description
+              text="Lorem ipsum dolor sit amet, consectetur adipiscing elit ut aliquam, purus sit amet luctus venenatis, lectus magna fringilla urna, porttitor"
+              as="p"
+              className="text-base text-white"
+            />
+          </Highlight.Root>
+        </div>
+
+        <div className="w-full max-w-sm space-y-5">
+          <Form.Control
+            onSubmit={handleSubmit(onSubmitSubscribeForm)}
+            isInvalid={!!errors.email?.message}
+            className="gap-4"
+          >
+            <Input.Container>
+              <Input.Label>Email</Input.Label>
+              <Controller
+                name="email"
+                defaultValue={''}
+                control={control}
+                render={({ field: { onChange, value } }) => (
+                  <Input.Root
+                    placeholder="Email"
+                    type="email"
+                    name={'email'}
+                    onChange={onChange}
+                    value={value}
+                    className="h-10 md:h-auto"
+                  />
+                )}
+              />
+            </Input.Container>
+
+            {errors.email && (
+              <Form.ErrorMessage>{errors.email.message}</Form.ErrorMessage>
+            )}
+
+            <Button.Root
+              type="submit"
+              variant="primary"
+              className="h-10 shadow-button-shadow md:h-12"
+              isLoading={isSubmitting}
+            >
+              <Button.Content>Subscribe</Button.Content>
+            </Button.Root>
+          </Form.Control>
+        </div>
       </section>
 
       <PageFooter.Root className="flex justify-center md:justify-between md:px-12 xl:px-28">
@@ -257,7 +337,6 @@ export const getServerSideProps: GetServerSideProps = async () => {
 
     const coingeckoResponse = responses[0].data
     const exchangerateResponse = responses[1].data
-
     return {
       props: {
         popularCryptos: coingeckoResponse,
