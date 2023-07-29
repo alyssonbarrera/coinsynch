@@ -2,7 +2,7 @@ import classNames from 'classnames'
 import { twMerge } from 'tailwind-merge'
 import * as Accordion from '@radix-ui/react-accordion'
 import {
-  formatCurrencyPriceWithSpace,
+  formatCurrencyPriceToUSDWithSpace,
   formatPercentage,
 } from '@/utils/currencyUtils'
 import { ReactNode, forwardRef } from 'react'
@@ -28,11 +28,11 @@ export const AccordionContent = forwardRef<
   >
     <div className="px-5 py-[15px]">
       {price && change && (
-        <div className="space-y-4 text-xs leading-sm md:text-md md:leading-6">
+        <div className="space-y-4 text-xs leading-4 md:text-md md:leading-6">
           <div className="flex items-center justify-between">
             <p className="text-secondary-500">Price</p>
             <p className="text-color-base">
-              {formatCurrencyPriceWithSpace(price)}
+              {formatCurrencyPriceToUSDWithSpace(price)}
             </p>
           </div>
           <div className="flex justify-between">

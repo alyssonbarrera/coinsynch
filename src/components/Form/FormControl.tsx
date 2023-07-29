@@ -1,24 +1,11 @@
-import { ComponentProps, ReactNode, useEffect } from 'react'
+import { ComponentProps, ReactNode } from 'react'
 import { twMerge } from 'tailwind-merge'
-
-import { useForm } from '@/hooks/useForm'
 
 type FormControlProps = ComponentProps<'form'> & {
   children: ReactNode
-  isInvalid?: boolean
 }
 
-export function FormControl({
-  children,
-  isInvalid,
-  ...props
-}: FormControlProps) {
-  const { setIsInvalid } = useForm()
-
-  useEffect(() => {
-    setIsInvalid(isInvalid ?? false)
-  }, [isInvalid, setIsInvalid])
-
+export function FormControl({ children, ...props }: FormControlProps) {
   return (
     <form
       {...props}

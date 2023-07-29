@@ -13,6 +13,7 @@ const email = z
 
 const password = z
   .string()
+  .nonempty(errorMessages.passwordRequired)
   .min(8, errorMessages.passwordMin)
   .max(16, errorMessages.passwordMax)
 
@@ -20,6 +21,10 @@ const passwordConfirmation = z
   .string()
   .min(8, errorMessages.passwordMin)
   .max(16, errorMessages.passwordMax)
+
+const acceptTerms = z.boolean().refine((data) => data === true, {
+  message: errorMessages.acceptTerms,
+})
 
 export const subscribeFormSchema = z.object({
   email,
@@ -38,6 +43,7 @@ const registerSchema = z
     email,
     password,
     passwordConfirmation,
+    acceptTerms,
   })
   .refine((data) => data.password === data.passwordConfirmation, {
     message: errorMessages.passwordMatch,

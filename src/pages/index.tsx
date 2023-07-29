@@ -15,8 +15,9 @@ import { TextTag } from '@/components/TextTag'
 import { Highlight } from '@/components/Highlight'
 import { PageFooter } from '@/components/PageFooter'
 import { HomeNavbar } from '@/components/HomeNavbar'
-import { ArrowRight } from '@/components/ArrowRight'
+import { ArrowRight } from '@/components/Icons/ArrowRight'
 
+import { api } from '@/services/api.client'
 import { coingecko } from '@/services/api.coingecko'
 import { exchangerate } from '@/services/api.exchangerate'
 
@@ -124,6 +125,7 @@ export default function Home({ popularCryptos, exchangeRate }: HomeProps) {
   const {
     control,
     handleSubmit,
+    reset,
     formState: { errors, isSubmitting },
   } = useForm<SubscribeFormSchema>({
     resolver: zodResolver(subscribeFormSchema),
@@ -132,7 +134,13 @@ export default function Home({ popularCryptos, exchangeRate }: HomeProps) {
   const onSubmitSubscribeForm: SubmitHandler<SubscribeFormSchema> = async (
     data,
   ) => {
-    console.log(data.email)
+    try {
+      await api.post('/users', data)
+
+      reset()
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   const handleViewPopularCryptos = () => {
@@ -157,7 +165,7 @@ export default function Home({ popularCryptos, exchangeRate }: HomeProps) {
       <main className="mx-auto flex max-w-[2560px] items-center justify-center px-6 pt-14 font-base md:justify-between md:pr-0 md:pt-[3.875rem] xl:pb-14 xl:pl-28 xl:pt-[6.25rem] 5xl:pl-0">
         <section className="pr-0 md:pr-5">
           <div className="mx-auto flex max-w-xs flex-col gap-2 text-center md:mx-0 md:gap-4 md:text-left xl:max-w-[36.875rem] xl:gap-6">
-            <p className="text-xl font-bold leading-8 text-primary-500 md:text-3xl md:leading-10 xl:text-5xl xl:leading-6xl xl:-tracking-px">
+            <p className="text-xl font-bold leading-8 text-primary-500 md:text-3xl md:leading-10 xl:text-5xl xl:leading-10 xl:-tracking-px">
               Lorem ipsum dolor sit amet, consectetur
             </p>
             <p className="text-label max-w-md leading-6 text-color-base md:max-w-none md:text-base xl:text-xl xl:leading-8">
@@ -200,16 +208,16 @@ export default function Home({ popularCryptos, exchangeRate }: HomeProps) {
             <Highlight.SubHeading
               as="h5"
               text="Lorem ipsum"
-              className="mb-1 text-md xl:text-xl xl:leading-3xl"
+              className="mb-1 text-md xl:text-xl xl:leading-7"
             />
             <Highlight.Heading
               as="h4"
               text="Lorem ipsum"
-              className="mb-4 text-2xl leading-3xl md:text-3xl md:leading-4xl xl:text-4xl xl:leading-5xl xl:-tracking-tight"
+              className="mb-4 text-2xl leading-7 md:text-3xl md:leading-8 xl:text-4xl xl:leading-9 xl:-tracking-tight"
             />
             <Highlight.Description
               text="Lorem ipsum dolor sit amet, consectetur adipiscing elit ut aliquam, purus sit amet luctus venenatis, lectus magna fringilla urna, porttitor"
-              className="md:text-md md:leading-2xl"
+              className="md:text-md md:leading-6"
             />
           </Highlight.Root>
 
@@ -223,7 +231,7 @@ export default function Home({ popularCryptos, exchangeRate }: HomeProps) {
       </section>
 
       <section className="space-y-4 px-6 py-14 font-base md:py-20 xl:py-[7.5rem]">
-        <h3 className="text-center text-xl font-bold leading-8 text-color-base md:text-2xl xl:text-3xl xl:leading-4xl">
+        <h3 className="text-center text-xl font-bold leading-8 text-color-base md:text-2xl xl:text-3xl xl:leading-8">
           Top Cryptos
         </h3>
 
@@ -257,7 +265,7 @@ export default function Home({ popularCryptos, exchangeRate }: HomeProps) {
             <Highlight.Heading
               text="Lorem ipsum"
               as="h3"
-              className="mb-4 text-2xl leading-8 text-white md:text-3xl md:leading-10 xl:text-4xl xl:leading-5xl"
+              className="mb-4 text-2xl leading-8 text-white md:text-3xl md:leading-10 xl:text-4xl xl:leading-9"
             />
             <Highlight.Description
               text="Lorem ipsum dolor sit amet, consectetur adipiscing elit ut aliquam, purus sit amet luctus venenatis, lectus magna fringilla urna, porttitor"
@@ -270,27 +278,27 @@ export default function Home({ popularCryptos, exchangeRate }: HomeProps) {
         <div className="w-full max-w-sm space-y-5">
           <Form.Control
             onSubmit={handleSubmit(onSubmitSubscribeForm)}
-            isInvalid={!!errors.email?.message}
             className="gap-4"
           >
-            <Input.Container>
+            <div className="space-y-2">
               <Input.Label>Email</Input.Label>
               <Controller
                 name="email"
                 defaultValue={''}
                 control={control}
-                render={({ field: { onChange, value } }) => (
+                render={({ field: { onChange, value, name } }) => (
                   <Input.Root
-                    placeholder="Email"
+                    name={name}
                     type="email"
-                    name={'email'}
+                    placeholder="Email"
                     onChange={onChange}
                     value={value}
                     className="h-10 md:h-auto"
+                    isInvalid={!!errors.email}
                   />
                 )}
               />
-            </Input.Container>
+            </div>
 
             {errors.email && (
               <Form.ErrorMessage>{errors.email.message}</Form.ErrorMessage>
@@ -333,10 +341,13 @@ export const getServerSideProps: GetServerSideProps = async () => {
       exchangerate.get('/latest/USD'),
     ]
 
-    const responses = await Promise.all(promises)
+    const responses = await Promise.allSettled(promises)
 
-    const coingeckoResponse = responses[0].data
-    const exchangerateResponse = responses[1].data
+    const coingeckoResponse =
+      responses[0].status === 'fulfilled' ? responses[0].value.data : []
+    const exchangerateResponse =
+      responses[1].status === 'fulfilled' ? responses[1].value.data : {}
+
     return {
       props: {
         popularCryptos: coingeckoResponse,

@@ -1,7 +1,7 @@
 import Image from 'next/image'
 import classNames from 'classnames'
 import {
-  formatCurrencyPriceWithSpace,
+  formatCurrencyPriceToUSDWithSpace,
   formatPercentage,
 } from '@/utils/currencyUtils'
 
@@ -44,7 +44,7 @@ export function HomePageTopCryptosTable({
                   width={32}
                   height={32}
                 />
-                <div className="flex gap-1 text-xs leading-sm md:text-md md:leading-6">
+                <div className="flex gap-1 text-xs leading-4 md:text-md md:leading-6">
                   <p className="capitalize text-color-base">{crypto.name}</p>
                   <span className="uppercase text-secondary-500">
                     {crypto.symbol}
@@ -53,7 +53,7 @@ export function HomePageTopCryptosTable({
               </div>
             </Table.Cell>
             <Table.Cell className="text-md leading-6 text-color-base">
-              {formatCurrencyPriceWithSpace(crypto.current_price)}
+              {formatCurrencyPriceToUSDWithSpace(crypto.current_price)}
             </Table.Cell>
             <Table.Cell
               className={classNames(

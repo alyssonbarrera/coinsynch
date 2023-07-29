@@ -11,3 +11,30 @@ body {
   opacity: 0.5;
   transition: opacity 0.3s linear;
 }
+
+.input--checkbox {
+  appearance: none;
+  border: 1px solid #FBAB34;
+  min-width: 16px;
+  min-height: 16px;
+  border-radius: 4px;
+  position: relative;
+
+  cursor: pointer;
+}
+
+.input--checkbox:checked {
+  background-color: #FBAB34;
+}
+
+.input--checkbox:checked:after {
+  content: url('../assets/icons/check.svg');
+  position: absolute;
+
+  transform: translate(-50%, -50%);
+  top: 50%;
+  left: 50%;
+
+  width: 16px;
+  height: 16px;
+}

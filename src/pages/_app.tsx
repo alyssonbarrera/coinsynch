@@ -1,12 +1,15 @@
 import 'swiper/css'
+
 import '@/styles/globals.css'
+
 import type { AppProps } from 'next/app'
-import { FormContextProvider } from '@/contexts/FormContext'
+
+import { AuthProvider } from '@/contexts/AuthContext'
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
-    <FormContextProvider>
+    <AuthProvider>
       <Component {...pageProps} />
-    </FormContextProvider>
+    </AuthProvider>
   )
 }

@@ -11,28 +11,25 @@ module.exports = {
         '5xl': '2560px',
       },
       fontSize: {
-        '5xl': '3rem', // 48px
-        '4xl': '2.5rem', // 40px
-        '3xl': '2rem', // 32px
-        '2xl': '1.5rem', // 24px
-        xl: '1.25rem', // 20px
-        md: '1rem', // 16px
-        sm: '0.875rem', // 14px
         xs: '0.75rem', // 12px
+        sm: '0.875rem', // 14px
+        md: '1rem', // 16px
+        xl: '1.25rem', // 20px
+        '2xl': '1.5rem', // 24px
+        '3xl': '2rem', // 32px
+        '4xl': '2.5rem', // 40px
+        '5xl': '3rem', // 48px
       },
       fontFamily: {
         base: ['Roboto', 'sans-serif'],
       },
       lineHeight: {
-        '6xl': '3.5rem', // 56px
-        '5xl': '3rem', // 48px
-        '4xl': '2.5rem', // 40px
-        '3xl': '2rem', // 32px
-        '2xl': '1.5rem', // 24px
-        xl: '1.25rem', // 20px
-        md: '1rem', // 16px
-        sm: '0.875rem', // 14px
-        xs: '0.75rem', // 12px
+        4: '0.875rem', // 14px
+        5: '1rem', // 16px
+        7: '2rem', // 32px
+        8: '2.5rem', // 40px
+        9: '3rem', // 48px
+        10: '3.5rem', // 56px
       },
       letterSpacing: {
         px: '0.0625rem', // 1px
@@ -90,6 +87,7 @@ module.exports = {
         'home-nav': '0px 4px 8px 0px rgba(77, 77, 77, 0.10)',
         'input-shadow': '0px 12px 24px 0px rgba(0, 0, 0, 0.10)',
         'button-shadow': '0px 12px 24px 0px rgba(0, 0, 0, 0.10)',
+        'modal-shadow': '0px 12px 24px 0px rgba(0, 0, 0, 0.10)',
       },
       gridTemplateColumns: {
         'home-nav-xl': '1fr 1fr minmax(0, 320px)',
@@ -121,6 +119,14 @@ module.exports = {
           from: { height: 'var(--radix-accordion-content-height)' },
           to: { height: 0 },
         },
+        overlayShow: {
+          from: { opacity: 0 },
+          to: { opacity: 1 },
+        },
+        contentShow: {
+          from: { opacity: 0, transform: 'translate(-50%, -48%) scale(0.96)' },
+          to: { opacity: 1, transform: 'translate(-50%, -50%) scale(1)' },
+        },
       },
       animation: {
         slideDownAndFade:
@@ -132,6 +138,8 @@ module.exports = {
           'slideRightAndFade 400ms cubic-bezier(0.16, 1, 0.3, 1)',
         slideDown: 'slideDown 300ms cubic-bezier(0.87, 0, 0.13, 1)',
         slideUp: 'slideUp 300ms cubic-bezier(0.87, 0, 0.13, 1)',
+        overlayShow: 'overlayShow 150ms cubic-bezier(0.16, 1, 0.3, 1)',
+        contentShow: 'contentShow 150ms cubic-bezier(0.16, 1, 0.3, 1)',
       },
       backgroundImage: {
         'home-wave-one': "url('../assets/shapes/wave-one.png')",

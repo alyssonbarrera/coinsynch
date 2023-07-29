@@ -16,7 +16,7 @@ export function AccordionRoot({ children, ...props }: AccordionRootProps) {
       collapsible
       onValueChange={(value) => setAccordionIsExpanded(!!value)}
     >
-      <div className="mr-6 flex items-center justify-between text-xs leading-sm text-secondary-500">
+      <div className="mr-6 flex items-center justify-between text-xs leading-4 text-secondary-500">
         <p>Crypto</p>
         <p>{accordionIsExpanded ? 'Actions' : 'Trade'}</p>
       </div>

@@ -4,16 +4,16 @@
 const nextConfig = {
   reactStrictMode: true,
   images: {
-    domains: ['assets.coingecko.com'],
+    domains: ['assets.coingecko.com', 'res.cloudinary.com', 'unsplash.com'],
   },
 }
 
 module.exports = nextConfig
 
-const withBundleAnalyzer = require('@next/bundle-analyzer')({
-  enabled: process.env.ANALYZE === 'true',
-})
+// const withBundleAnalyzer = require('@next/bundle-analyzer')({
+//   enabled: process.env.ANALYZE === 'true',
+// })
 
-module.exports = withBundleAnalyzer({
-  ...nextConfig,
-})
+// module.exports = withBundleAnalyzer({
+//   ...nextConfig,
+// })

@@ -1,21 +1,50 @@
-import { useForm } from '@/hooks/useForm'
-import { ComponentProps } from 'react'
-import { twMerge } from 'tailwind-merge'
+import { tv } from 'tailwind-variants'
+import { ComponentProps, ElementType } from 'react'
 
-type InputRootProps = ComponentProps<'input'>
+const input = tv({
+  base: 'relative max-h-12 w-full max-w-sm rounded-md p-4 outline-none selection:bg-secondary-300 placeholder:text-base placeholder:text-secondary-400',
+  variants: {
+    type: {
+      primary: 'bg-white shadow-input-shadow',
+      secondary: 'border border-secondary-300 pl-10',
+    },
+    error: {
+      true: 'text-quaternary-500 outline-2 -outline-offset-2 outline-quaternary-500',
+      false: '',
+    },
+  },
+  defaultVariants: {
+    type: 'primary',
+  },
+})
 
-export function InputRoot({ ...props }: InputRootProps) {
-  const { isInvalid } = useForm()
+type InputRootProps = ComponentProps<'input'> & {
+  isInvalid?: boolean
+  icon?: ElementType
+  variant?: keyof typeof input.variants.type
+}
 
+export function InputRoot({
+  isInvalid,
+  icon: Icon,
+  variant,
+  ...props
+}: InputRootProps) {
   return (
-    <input
-      {...props}
-      className={twMerge(
-        'relative max-h-12 w-full max-w-sm rounded-md bg-white p-4 shadow-input-shadow outline-none selection:bg-secondary-300 placeholder:text-base placeholder:text-secondary-400',
-        isInvalid &&
-          'text-quaternary-500 outline-2 -outline-offset-2 outline-quaternary-500',
-        props.className,
+    <div className="relative">
+      {Icon && (
+        <div className="absolute top-1/2 z-10 flex -translate-y-1/2 items-center pl-4">
+          <Icon />
+        </div>
       )}
-    />
+      <input
+        {...props}
+        className={input({
+          type: Icon ? 'secondary' : variant,
+          error: isInvalid,
+          className: props.className,
+        })}
+      />
+    </div>
   )
 }

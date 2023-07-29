@@ -2,7 +2,7 @@ import Image from 'next/image'
 import { twMerge } from 'tailwind-merge'
 import { ReactNode, forwardRef } from 'react'
 import * as Accordion from '@radix-ui/react-accordion'
-import { ChevronDownIcon } from '@/components/ChevronDownIcon'
+import { ChevronDownIcon } from '@/components/Icons/ChevronDownIcon'
 import { StaticImport } from 'next/dist/shared/lib/get-img-props'
 
 type AccordionTitleProps = {
@@ -33,7 +33,7 @@ export const AccordionTitle = forwardRef<
           <Image src={image} alt={`${title} icon`} width={24} height={24} />
         )}
         {title && acronym && (
-          <div className="flex gap-1 text-xs leading-sm md:text-md md:leading-6">
+          <div className="flex gap-1 text-xs leading-4 md:text-md md:leading-6">
             <p className="capitalize">{title}</p>
             <span className="uppercase text-secondary-500">{acronym}</span>
           </div>

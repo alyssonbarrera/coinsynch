@@ -20,6 +20,24 @@ yarn
 pnpm install
 ```
 
+🔑 Create a `.env.local` file and add the following environment variables:
+
+```bash
+# Next Bundle Analyzer
+ANALYZE=false
+
+# API URL
+NEXT_PUBLIC_API_URL=""
+
+# Firebase
+NEXT_PUBLIC_FIREBASE_API_KEY=""
+NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=""
+NEXT_PUBLIC_FIREBASE_PROJECT_ID=""
+NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=""
+NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=""
+NEXT_PUBLIC_FIREBASE_APP_ID=""
+```
+
 ⌨ Then, run the development server:
 
 ```bash
@@ -32,7 +50,7 @@ pnpm dev
 
 🌎 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-🧪 To run the tests, run the development server:
+🧪 To run the tests
 
 ```bash
 npm run test
@@ -42,7 +60,7 @@ yarn test
 pnpm test
 ```
 
-🖊 To run the linter, run the development server:
+🖊 To run the linter
 
 ```bash
 npm run lint
@@ -52,7 +70,7 @@ yarn lint
 pnpm lint
 ```
 
-📦 To build the project, run the development server:
+📦 To build the project
 
 ```bash
 npm run build
@@ -70,4 +88,5 @@ pnpm build
     <img width=30 src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nextjs/nextjs-line.svg" />
     <img width=30 src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/tailwindcss/tailwindcss-plain.svg" />
     <img width=30 src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/jest/jest-plain.svg" />
+    <img width=30 src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/firebase/firebase-plain.svg" />
 </div>
