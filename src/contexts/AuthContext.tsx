@@ -34,8 +34,9 @@ type AuthContextData = {
   signIn: (credentials: SignInCredentials) => Promise<void>
   signUp: (credentials: SignUpCredentials) => Promise<void>
   signOut: () => void
-  user: User | null
+  user: UserDTO | User | null
   isAuthenticated: boolean
+  setUser: (user: User) => void
 }
 
 type AuthProviderProps = {
@@ -166,7 +167,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   return (
     <AuthContext.Provider
-      value={{ signIn, signUp, signOut, isAuthenticated, user }}
+      value={{ signIn, signUp, signOut, isAuthenticated, user, setUser }}
     >
       {children}
     </AuthContext.Provider>

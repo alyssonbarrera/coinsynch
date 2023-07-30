@@ -14,9 +14,11 @@ export function BalanceCard({ balance }: BalanceCardProps) {
         </div>
         <div className="flex flex-col">
           <h4 className="text-sm leading-5 text-color-base md:text-xl md:leading-7 xl:text-2xl xl:leading-7">
-            Balance
+            Balance <span className="hidden md:inline">in US$</span>
           </h4>
-          <span className="text-xs leading-4 text-secondary-500">in US$</span>
+          <span className="text-xs leading-4 text-secondary-500 md:hidden">
+            in US$
+          </span>
           <p className="hidden text-secondary-500 sm:block md:text-sm md:leading-5 xl:text-base">
             (approximately)
           </p>

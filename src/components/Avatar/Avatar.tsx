@@ -25,9 +25,9 @@ export function Avatar({ image, alt, ...props }: AvatarProps) {
         delayMs={600}
       >
         {alt
-          .split(' ')
+          ?.split(' ')
           .map((name) => name[0])
-          .join('')}
+          .join('') || alt}
       </RadixAvatar.Fallback>
     </RadixAvatar.Root>
   )

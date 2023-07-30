@@ -17,6 +17,12 @@ body::-webkit-scrollbar-thumb {
   background-color: #FBAB34;
 }
 
+input[type=password]::-ms-reveal,
+input[type=password]::-ms-clear
+{
+    display: none;
+}
+
 .home__swiper-container .swiper-slide:not(.swiper-slide-active) {
   opacity: 0.5;
   transition: opacity 0.3s linear;

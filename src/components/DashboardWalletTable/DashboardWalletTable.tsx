@@ -16,7 +16,7 @@ type DashboardWalletTableProps = {
 
 export function DashboardWalletTable({ wallet }: DashboardWalletTableProps) {
   return (
-    <Table.Root>
+    <Table.Root className="rounded-b-lg">
       <Table.Head>
         <Table.Row className="text-sm leading-5">
           <Table.Cell>#</Table.Cell>
@@ -27,12 +27,13 @@ export function DashboardWalletTable({ wallet }: DashboardWalletTableProps) {
         </Table.Row>
       </Table.Head>
 
-      <Table.Body>
+      <Table.Body className="rounded-b-lg">
         {wallet.map((crypto, index) => (
           <Table.Row
             key={crypto.id}
             className={classNames(
               (index + 1) % 2 === 0 && 'w-full bg-secondary-100',
+              index === wallet.length - 1 && 'rounded-b-lg',
             )}
           >
             <Table.Cell className="text-sm leading-5">

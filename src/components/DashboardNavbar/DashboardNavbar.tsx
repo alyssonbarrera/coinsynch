@@ -1,9 +1,10 @@
 import { ComponentProps } from 'react'
+
 import { Logo } from '@/components/Logo'
 import { DropdownMenu } from './DropdownMenu'
+import { MenuIcon } from '@/components/Icons/MenuIcon'
 
 import { UserDTO } from '@/dtos/UserDTO'
-import { MenuIcon } from '../Icons/MenuIcon'
 
 type DashboardNavbarProps = ComponentProps<'nav'> & {
   user: UserDTO

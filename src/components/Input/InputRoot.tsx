@@ -10,6 +10,7 @@ const input = tv({
     type: {
       primary: 'bg-white shadow-input-shadow',
       secondary: 'border border-secondary-300 pl-10',
+      tertiary: 'border border-secondary-300',
     },
     error: {
       true: 'text-quaternary-500 outline-2 -outline-offset-2 outline-quaternary-500',

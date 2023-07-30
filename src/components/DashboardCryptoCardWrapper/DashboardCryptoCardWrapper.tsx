@@ -9,7 +9,7 @@ export function DashboardCryptoCardWrapper({
   wallet,
 }: DashboardCryptoCardWrapperProps) {
   return (
-    <div className="flex flex-auto gap-4">
+    <div className="flex h-full flex-auto flex-wrap justify-center gap-4">
       {wallet.map((crypto) => (
         <DashboardCryptoCard.Root key={crypto.id}>
           <DashboardCryptoCard.Header

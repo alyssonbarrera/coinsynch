@@ -13,7 +13,7 @@ export function DashboardCryptoCardRoot({
     <div
       {...props}
       className={twMerge(
-        'max-h-60 min-h-[3.0625rem] w-full min-w-[8rem] rounded-md shadow-dashboard-crypto-card',
+        'min-h-[15.5rem] w-full min-w-[8rem] max-w-[8rem] rounded-md shadow-dashboard-crypto-card min-[385px]:max-w-[10rem]',
         props.className,
       )}
     >

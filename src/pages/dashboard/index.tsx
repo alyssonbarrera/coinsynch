@@ -14,17 +14,21 @@ import { Wallet } from '@/components/Icons/Wallet'
 import { PageFooter } from '@/components/PageFooter'
 import { BalanceCard } from '@/components/BalanceCard'
 import { EmptyWallet } from '@/components/Icons/EmptyWallet'
+import { AddCryptoModal } from '@/components/AddCryptoModal'
 import { DashboardNavbar } from '@/components/DashboardNavbar'
 
 import { UserDTO } from '@/dtos/UserDTO'
 import { CoinDTO } from '@/dtos/CoinDTO'
 import { WalletDTO } from '@/dtos/WalletDTO'
 
+import { useAuth } from '@/hooks/useAuth'
+import { useModal } from '@/hooks/useModal'
 import { useBreakpoint } from '@/hooks/useBreakpoint'
 
 import { withSSRAuth } from '@/utils/withSSRAuth'
 import { coingecko } from '@/services/api.coingecko'
 import { setupAPIClient } from '@/services/api.core'
+import { useWalletStore } from '@/store/walletStore'
 
 const DashboardWalletTable = dynamic(
   () =>
@@ -71,12 +75,19 @@ export default function Dashboard({
   marketData,
   popularCryptos,
 }: DashboardProps) {
-  const { isAbove1280, isAbove768, isBelow768 } = useBreakpoint()
+  const { setUser } = useAuth()
+  const { onOpen } = useModal()
+  const { fetchWallet, setWallet } = useWalletStore()
   const [sidebarIsOpen, setSidebarIsOpen] = useState(false)
+  const { isAbove1280, isAbove768, isBelow768 } = useBreakpoint()
 
-  const chartSeries = [{ name: 'series1', data: marketData.prices }]
-  const balance = user.wallet
-    .map((wallet) => wallet.holding * wallet.coin.current_price)
+  const handleOpenAddCryptoModal = () => {
+    onOpen('add-crypto')
+  }
+
+  const chartSeries = [{ name: 'series1', data: marketData?.prices }]
+  const balance = fetchWallet()
+    ?.map((wallet) => wallet.holding * wallet.coin.current_price)
     .reduce((a, b) => a + b, 0)
 
   useEffect(() => {
@@ -84,10 +95,9 @@ export default function Dashboard({
   }, [isAbove1280])
 
   useEffect(() => {
-    if (user?.wallet?.length === 0) {
-      toast.error('Error on loading data, please try again later.')
-    }
-  }, [user])
+    setUser(user)
+    user.wallet && setWallet(user.wallet)
+  }, [setUser, setWallet, user])
 
   return (
     <>
@@ -104,7 +114,7 @@ export default function Dashboard({
 
       <Sidebar isOpen={sidebarIsOpen} />
 
-      <main className="h-full min-h-[calc(100vh-128px)] p-6 font-base sm:px-12 sm:pt-10 md:bg-secondary-100 xl:ml-20 xl:px-16 xl:pt-14">
+      <main className="mb-16 min-h-[calc(100vh-128px)] p-6 font-base sm:px-12 sm:pt-10 md:mb-0 md:bg-secondary-100 xl:ml-20 xl:px-16 xl:pt-14">
         <header className="flex flex-wrap items-center justify-between desktop-xl:flex-nowrap desktop-xl:space-x-8">
           <div className="mb-6 w-full desktop-xl:mb-0 desktop-xl:max-w-[37rem]">
             <BalanceCard balance={balance} />
@@ -113,7 +123,11 @@ export default function Dashboard({
             <div className="flex-1">
               <ChartCard
                 chartSeries={chartSeries}
-                crypto={user.wallet[0]?.coin || popularCryptos[0]}
+                crypto={
+                  fetchWallet()[0]?.coin ||
+                  (popularCryptos && popularCryptos[0]) ||
+                  null
+                }
               />
             </div>
             <div className="flex-1 desktop-xl:min-w-[17.5rem]">
@@ -122,8 +136,8 @@ export default function Dashboard({
           </div>
         </header>
 
-        <section className="mt-8 h-full border-t border-secondary-300 pt-6 md:rounded-lg md:border-none md:bg-white md:shadow-dashboard-my-wallet-section">
-          <header className="flex justify-between pb-4 md:border-b md:border-secondary-200 md:p-6">
+        <section className="mt-8 border-t border-secondary-300 md:rounded-lg md:border-none md:bg-white md:shadow-dashboard-my-wallet-section">
+          <header className="flex justify-between py-7 pb-4 md:border-b md:border-secondary-200 md:p-6">
             <div className="flex gap-4">
               <Wallet />{' '}
               <h4 className="text-xl font-bold leading-7 text-color-base sm:text-2xl sm:leading-7">
@@ -131,7 +145,10 @@ export default function Dashboard({
               </h4>
             </div>
 
-            <Button.Root className="h-8 max-w-[24px] sm:max-w-[7.5rem]">
+            <Button.Root
+              className="h-8 max-w-[24px] sm:max-w-[7.5rem]"
+              onClick={handleOpenAddCryptoModal}
+            >
               <Button.Content className="sm:hidden md:text-sm md:leading-5 xl:text-sm xl:leading-5">
                 +
               </Button.Content>
@@ -142,7 +159,7 @@ export default function Dashboard({
           </header>
 
           <div className="flex min-h-[19.25rem] justify-center">
-            {user.wallet.length === 0 && (
+            {fetchWallet().length === 0 && (
               <div className="flex h-full flex-col items-center gap-6 self-center text-center text-color-base">
                 <EmptyWallet />
                 <div className="space-y-2">
@@ -155,34 +172,42 @@ export default function Dashboard({
                 </div>
               </div>
             )}
-            {isAbove768 && <DashboardWalletTable wallet={user.wallet} />}
-            {isBelow768 && <DashboardCryptoCardWrapper wallet={user.wallet} />}
+            {isAbove768 && fetchWallet().length !== 0 && (
+              <div className="max-h-[23rem] w-full overflow-y-auto rounded-lg">
+                <DashboardWalletTable wallet={fetchWallet()} />
+              </div>
+            )}
+            {isBelow768 && fetchWallet().length !== 0 && (
+              <DashboardCryptoCardWrapper wallet={fetchWallet()} />
+            )}
           </div>
         </section>
       </main>
 
-      <PageFooter.Root className="flex justify-between bg-white px-12 drop-shadow-dashboard-footer xl:justify-center">
+      <PageFooter.Root className="sticky bottom-0 flex justify-between bg-white px-12 drop-shadow-dashboard-footer xl:justify-center">
         <PageFooter.Content className="w-full text-center text-xs leading-4 md:w-auto md:text-sm md:leading-5 xl:w-full">
           Copyright © 2023 - All rights reserved
         </PageFooter.Content>
         <PageFooter.Logo className="hidden md:block xl:hidden" />
       </PageFooter.Root>
+
+      <AddCryptoModal cryptos={popularCryptos} />
     </>
   )
 }
 
 export const getServerSideProps = withSSRAuth(async (context) => {
-  // because of the nature of the fake API, fetching the token is required to extract the firebase_id for retrieving user data
-  const { '@coinsynch:token': token } = parseCookies(
-    context,
-    '@coinsynch:token',
-  )
-
-  const decodedToken = jwtDecode(token) as { user_id: string }
-
-  const apiClient = setupAPIClient(context)
-
   try {
+    const apiClient = setupAPIClient(context)
+
+    // because of the nature of the fake API, fetching the token is required to extract the firebase_id for retrieving user data
+    const { '@coinsynch:token': token } = parseCookies(
+      context,
+      '@coinsynch:token',
+    )
+
+    const decodedToken = jwtDecode(token) as { user_id: string }
+
     const { data } = await apiClient.get('/users', {
       params: {
         firebase_id: decodedToken.user_id,
@@ -201,6 +226,8 @@ export const getServerSideProps = withSSRAuth(async (context) => {
       }
     }
 
+    const firstCryptoId = user.wallet[0]?.crypto_id || 'bitcoin'
+
     const promises = [
       coingecko.get('/coins/markets', {
         params: {
@@ -211,10 +238,10 @@ export const getServerSideProps = withSSRAuth(async (context) => {
           sparkline: false,
         },
       }),
-      coingecko.get(`/coins/${user.wallet[0].crypto_id}/market_chart`, {
+      coingecko.get(`/coins/${firstCryptoId}/market_chart`, {
         params: {
           vs_currency: 'usd',
-          days: 2,
+          days: 1,
         },
       }),
     ]
@@ -226,16 +253,20 @@ export const getServerSideProps = withSSRAuth(async (context) => {
     const coingeckoMarketChartResponse =
       responses[1].status === 'fulfilled' ? responses[1].value.data : []
 
-    if (coingeckoTopCryptosResponse.length > 0) {
-      user.wallet = user.wallet.map((wallet: WalletDTO) => {
+    let wallet = []
+
+    if (coingeckoTopCryptosResponse.length > 0 && user.wallet.length > 0) {
+      wallet = user.wallet.map((wallet: WalletDTO) => {
         return {
           ...wallet,
           coin: coingeckoTopCryptosResponse.find(
-            (crypto: CoinDTO) => crypto.symbol === wallet.symbol,
+            (crypto: CoinDTO) => crypto.id === wallet.crypto_id,
           ),
         }
       })
     }
+
+    user.wallet = wallet
 
     return {
       props: {
@@ -248,6 +279,8 @@ export const getServerSideProps = withSSRAuth(async (context) => {
     return {
       props: {
         user: {},
+        marketData: [],
+        popularCryptos: [],
       },
     }
   }
