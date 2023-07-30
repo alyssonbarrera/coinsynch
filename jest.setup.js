@@ -9,3 +9,9 @@ jest.mock('@/hooks/useModal', () => ({
     isModalOpen: jest.fn(),
   }),
 }))
+
+jest.mock('next/router', () => ({
+  useRouter: () => ({
+    push: jest.fn(),
+  }),
+}))
