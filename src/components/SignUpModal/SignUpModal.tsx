@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { toast } from 'react-hot-toast'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Controller, SubmitHandler, useForm } from 'react-hook-form'
 
@@ -14,18 +15,22 @@ import { Lock } from '@/components/Icons/Lock'
 import { User } from '@/components/Icons/User'
 
 import { useAuth } from '@/hooks/useAuth'
+import { UserAlreadyExistsError } from '@/services/errors/UserAlreadyExistsError'
 
-type SignUpModalProps = {
-  isModalOpen: boolean
-  setIsModalOpen: (isOpen: boolean) => void
-}
+import { useModal } from '@/hooks/useModal'
+import { errorMessages } from '@/utils/errorMessages'
 
 const signUpFormSchema = userValidations.schemas.register
 
 type SignUpFormSchema = z.infer<typeof signUpFormSchema>
 
-export function SignUpModal({ isModalOpen, setIsModalOpen }: SignUpModalProps) {
+export function SignUpModal() {
   const { signUp } = useAuth()
+  const { onOpen } = useModal()
+
+  const handleOpenSignIpModal = () => {
+    onOpen('signin')
+  }
 
   const {
     control,
@@ -42,17 +47,23 @@ export function SignUpModal({ isModalOpen, setIsModalOpen }: SignUpModalProps) {
   ) => {
     try {
       await signUp(data)
+
+      toast.success('Account created successfully!')
+
       reset()
     } catch (error) {
-      console.log(error)
+      if (error instanceof UserAlreadyExistsError) {
+        toast.error(error.message)
+      } else {
+        toast.error(errorMessages.unexpectedError)
+      }
     }
   }
 
   return (
     <Modal.Root
-      open={isModalOpen}
-      onOpenChange={(isOpen) => {
-        setIsModalOpen(isOpen)
+      name="signup"
+      onOpenChange={() => {
         clearErrors()
       }}
     >
@@ -187,7 +198,7 @@ export function SignUpModal({ isModalOpen, setIsModalOpen }: SignUpModalProps) {
             <p className="text-sm leading-5 text-color-base">
               I have read and accept the{' '}
               <span className="font-bold">Privacy Policy</span>{' '}
-              <span className="font-bold">Terms of User Sign</span>{' '}
+              <span className="font-bold">Terms of User Sign.</span>{' '}
             </p>
           </div>
 
@@ -204,12 +215,19 @@ export function SignUpModal({ isModalOpen, setIsModalOpen }: SignUpModalProps) {
             <Button.Content>Sign up</Button.Content>
           </Button.Root>
 
-          <p className="text-center text-sm leading-5 text-color-base">
-            Already have and account?{' '}
-            <span className="font-bold">Sign in to</span>{' '}
-            <span className="font-bold text-primary-500">Coin</span>
-            <span className="font-bold text-secondary-500">Synch</span>
-          </p>
+          <div className="text-center text-xs leading-4 text-color-base xl:text-sm xl:leading-5">
+            <span>Already have and account?</span>{' '}
+            <button
+              className="font-bold"
+              onClick={handleOpenSignIpModal}
+              type="button"
+              aria-label="Sign in"
+            >
+              Sign in to{' '}
+              <span className="font-bold text-primary-500">Coin</span>
+              <span className="font-bold text-secondary-500">Synch</span>
+            </button>{' '}
+          </div>
         </Form.Control>
       </Modal.Content>
     </Modal.Root>

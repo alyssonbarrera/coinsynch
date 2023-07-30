@@ -5,6 +5,16 @@
 body {
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
+
+  font-family: 'Roboto', sans-serif;
+}
+
+body::-webkit-scrollbar {
+  background-color: #ffffff;
+  width: 5px;
+}
+body::-webkit-scrollbar-thumb {
+  background-color: #FBAB34;
 }
 
 .home__swiper-container .swiper-slide:not(.swiper-slide-active) {

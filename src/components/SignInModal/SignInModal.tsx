@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import toast from 'react-hot-toast'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Controller, SubmitHandler, useForm } from 'react-hook-form'
 
@@ -13,18 +14,22 @@ import { Mail } from '@/components/Icons/Mail'
 import { Lock } from '@/components/Icons/Lock'
 
 import { useAuth } from '@/hooks/useAuth'
+import { useModal } from '@/hooks/useModal'
 
-type SignInModalProps = {
-  isModalOpen: boolean
-  setIsModalOpen: (isOpen: boolean) => void
-}
+import { errorMessages } from '@/utils/errorMessages'
+import { InvalidCredentialsError } from '@/services/errors/InvalidCredentialsError'
 
 const signInFormSchema = userValidations.schemas.signIn
 
 type SignInFormSchema = z.infer<typeof signInFormSchema>
 
-export function SignInModal({ isModalOpen, setIsModalOpen }: SignInModalProps) {
+export function SignInModal() {
   const { signIn } = useAuth()
+  const { onOpen } = useModal()
+
+  const handleOpenSignUpModal = () => {
+    onOpen('signup')
+  }
 
   const {
     control,
@@ -41,23 +46,28 @@ export function SignInModal({ isModalOpen, setIsModalOpen }: SignInModalProps) {
   ) => {
     try {
       await signIn(data)
+
       reset()
     } catch (error) {
-      console.log(error)
+      if (error instanceof InvalidCredentialsError) {
+        toast.error(error.message)
+      } else {
+        toast.error(errorMessages.unexpectedError)
+      }
     }
   }
 
   return (
     <Modal.Root
-      open={isModalOpen}
-      onOpenChange={(isOpen) => {
-        setIsModalOpen(isOpen)
+      name="signin"
+      onOpenChange={() => {
+        reset()
         clearErrors()
       }}
     >
       <Modal.Content>
         <Modal.CloseButton icon={X} />
-        <Modal.Title className="mb-6 text-center text-2xl leading-8 text-color-base">
+        <Modal.Title className="mb-6 text-center text-xl leading-7 text-color-base xl:text-2xl xl:leading-8">
           Sign in to <span className="font-bold text-primary-500">Coin</span>
           <span className="font-bold text-secondary-500">Synch</span>
         </Modal.Title>
@@ -131,11 +141,19 @@ export function SignInModal({ isModalOpen, setIsModalOpen }: SignInModalProps) {
             <Button.Content>Sign in</Button.Content>
           </Button.Root>
 
-          <p className="text-center text-sm leading-5 text-color-base">
-            Don’t have an account? <span className="font-bold">Sign up to</span>{' '}
-            <span className="font-bold text-primary-500">Coin</span>
-            <span className="font-bold text-secondary-500">Synch</span>
-          </p>
+          <div className="text-center text-xs leading-4 text-color-base xl:text-sm xl:leading-5">
+            <span className="hidden md:inline">Don’t have an account?</span>{' '}
+            <button
+              className="font-bold"
+              onClick={handleOpenSignUpModal}
+              type="button"
+              aria-label="Sign Up"
+            >
+              <span className="font-bold">Sign up to</span>{' '}
+              <span className="font-bold text-primary-500">Coin</span>
+              <span className="font-bold text-secondary-500">Synch</span>
+            </button>
+          </div>
         </Form.Control>
       </Modal.Content>
     </Modal.Root>

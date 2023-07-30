@@ -26,6 +26,6 @@ if (typeof window !== 'undefined') {
   setPersistence(auth, browserSessionPersistence)
     .then()
     .catch((error) => {
-      console.log('Erro ao configurar a persistência de sessão:', error)
+      console.log('Error setting persistence: ', error)
     })
 }

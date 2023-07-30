@@ -10,7 +10,7 @@ export function PageFooterRoot({ children, ...props }: PageFooterRootProps) {
     <footer
       {...props}
       className={twMerge(
-        'flex h-16 w-full items-center justify-center',
+        'flex h-16 w-full items-center justify-center font-base',
         props.className,
       )}
     >

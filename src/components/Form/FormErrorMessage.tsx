@@ -13,7 +13,7 @@ export function FormErrorMessage({
     <p
       {...props}
       className={twMerge(
-        '-mt-2 block text-sm leading-4 text-quaternary-600',
+        '-mt-2 block text-xs leading-4 text-quaternary-600 xl:text-sm xl:leading-4',
         props.className,
       )}
     >

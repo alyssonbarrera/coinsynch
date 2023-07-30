@@ -13,7 +13,7 @@ export function PageFooterContent({
     <p
       {...props}
       className={twMerge(
-        'text-label leading-label text-color-base',
+        'text-label leading-label text-sm leading-5 text-color-base',
         props.className,
       )}
     >

@@ -1,10 +1,11 @@
 import { Link } from 'react-scroll'
 import dynamic from 'next/dynamic'
-import React, { useState } from 'react'
 import * as RadixDropdownMenu from '@radix-ui/react-dropdown-menu'
 
 import { Button } from '@/components/Button'
 import { MenuIcon } from '@/components/Icons/MenuIcon'
+
+import { useModal } from '@/hooks/useModal'
 
 type DropdownMenuProps = {
   defaultOpen?: boolean
@@ -31,8 +32,15 @@ const SignUpModal = dynamic(
 )
 
 export function DropdownMenu({ ...props }: DropdownMenuProps) {
-  const [signInModalIsOpen, setSignInModalIsOpen] = useState(false)
-  const [signUpModalIsOpen, setSignUpModalIsOpen] = useState(false)
+  const { onOpen } = useModal()
+
+  const handleSignInModalOpenChange = () => {
+    onOpen('signin')
+  }
+
+  const handleSignUpModalOpenChange = () => {
+    onOpen('signup')
+  }
 
   return (
     <>
@@ -76,7 +84,7 @@ export function DropdownMenu({ ...props }: DropdownMenuProps) {
                 type="button"
                 variant="transparent"
                 className="h-8 min-w-[6.25rem]"
-                onClick={() => setSignInModalIsOpen(true)}
+                onClick={handleSignInModalOpenChange}
               >
                 <Button.Content className="text-xs leading-4 text-color-base">
                   Sign In
@@ -87,6 +95,7 @@ export function DropdownMenu({ ...props }: DropdownMenuProps) {
               <Button.Root
                 type="button"
                 className="max-h-8 min-w-[6.25rem] flex-grow-0"
+                onClick={handleSignUpModalOpenChange}
               >
                 <Button.Content className="text-xs leading-4 text-white">
                   Sign Up
@@ -97,15 +106,9 @@ export function DropdownMenu({ ...props }: DropdownMenuProps) {
         </RadixDropdownMenu.Portal>
       </RadixDropdownMenu.Root>
 
-      <SignInModal
-        isModalOpen={signInModalIsOpen}
-        setIsModalOpen={setSignInModalIsOpen}
-      />
+      <SignInModal />
 
-      <SignUpModal
-        isModalOpen={signUpModalIsOpen}
-        setIsModalOpen={setSignUpModalIsOpen}
-      />
+      <SignUpModal />
     </>
   )
 }

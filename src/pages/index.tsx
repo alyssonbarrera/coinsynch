@@ -1,8 +1,9 @@
-import Head from 'next/head'
 import { z } from 'zod'
-import { useState } from 'react'
+import Head from 'next/head'
 import dynamic from 'next/dynamic'
+import { toast } from 'react-hot-toast'
 import { GetServerSideProps } from 'next'
+import { useEffect, useState } from 'react'
 import { ClipLoader } from 'react-spinners'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Controller, useForm, SubmitHandler } from 'react-hook-form'
@@ -105,7 +106,6 @@ const HomePageTopCryptosTable = dynamic(
 type HomeProps = {
   popularCryptos: CoinDTO[]
   exchangeRate: ExchangeRateDTO
-  error?: boolean
 }
 
 const subscribeFormSchema = userValidations.schemas.subscribe
@@ -137,9 +137,12 @@ export default function Home({ popularCryptos, exchangeRate }: HomeProps) {
     try {
       await api.post('/users', data)
 
+      toast.success('You have successfully subscribed to our newsletter!')
+
       reset()
     } catch (error) {
       console.log(error)
+      toast.error('Error on subscribing to our newsletter, please try again.')
     }
   }
 
@@ -150,6 +153,12 @@ export default function Home({ popularCryptos, exchangeRate }: HomeProps) {
       setNumberOfResults(4)
     }
   }
+
+  useEffect(() => {
+    if (popularCryptos.length === 0 || !exchangeRate) {
+      toast.error('Error on loading data, please try again later.')
+    }
+  }, [exchangeRate, popularCryptos.length])
 
   return (
     <>
@@ -163,8 +172,8 @@ export default function Home({ popularCryptos, exchangeRate }: HomeProps) {
         />
       </header>
       <main className="mx-auto flex max-w-[2560px] items-center justify-center px-6 pt-14 font-base md:justify-between md:pr-0 md:pt-[3.875rem] xl:pb-14 xl:pl-28 xl:pt-[6.25rem] 5xl:pl-0">
-        <section className="pr-0 md:pr-5">
-          <div className="mx-auto flex max-w-xs flex-col gap-2 text-center md:mx-0 md:gap-4 md:text-left xl:max-w-[36.875rem] xl:gap-6">
+        <section className="pr-0 xl:pr-0">
+          <div className="mx-auto flex max-w-2xl flex-col gap-2 text-center md:mx-0 md:gap-4 md:text-left xl:max-w-[36.875rem] xl:gap-6">
             <p className="text-xl font-bold leading-8 text-primary-500 md:text-3xl md:leading-10 xl:text-5xl xl:leading-10 xl:-tracking-px">
               Lorem ipsum dolor sit amet, consectetur
             </p>
@@ -197,7 +206,7 @@ export default function Home({ popularCryptos, exchangeRate }: HomeProps) {
             </TextTag.Root>
           </div>
         </section>
-        {isAbove768 && <HomePageImagesCarousel />}
+        <div>{isAbove768 && <HomePageImagesCarousel />}</div>
       </main>
 
       <div className="h-[15.4375rem] w-full bg-home-wave-one bg-cover bg-top bg-no-repeat" />
@@ -327,41 +336,30 @@ export default function Home({ popularCryptos, exchangeRate }: HomeProps) {
 }
 
 export const getServerSideProps: GetServerSideProps = async () => {
-  try {
-    const promises = [
-      coingecko.get('/coins/markets', {
-        params: {
-          vs_currency: 'usd',
-          order: 'market_cap_desc',
-          per_page: 10,
-          page: 1,
-          sparkline: false,
-        },
-      }),
-      exchangerate.get('/latest/USD'),
-    ]
-
-    const responses = await Promise.allSettled(promises)
-
-    const coingeckoResponse =
-      responses[0].status === 'fulfilled' ? responses[0].value.data : []
-    const exchangerateResponse =
-      responses[1].status === 'fulfilled' ? responses[1].value.data : {}
-
-    return {
-      props: {
-        popularCryptos: coingeckoResponse,
-        exchangeRate: exchangerateResponse,
-        error: false,
+  const promises = [
+    coingecko.get('/coins/markets', {
+      params: {
+        vs_currency: 'usd',
+        order: 'market_cap_desc',
+        per_page: 10,
+        page: 1,
+        sparkline: false,
       },
-    }
-  } catch (error) {
-    return {
-      props: {
-        popularCryptos: [],
-        exchangeRate: {},
-        error: true,
-      },
-    }
+    }),
+    exchangerate.get('/latest/USD'),
+  ]
+
+  const responses = await Promise.allSettled(promises)
+
+  const coingeckoResponse =
+    responses[0].status === 'fulfilled' ? responses[0].value.data : []
+  const exchangerateResponse =
+    responses[1].status === 'fulfilled' ? responses[1].value.data : {}
+
+  return {
+    props: {
+      popularCryptos: coingeckoResponse,
+      exchangeRate: exchangerateResponse,
+    },
   }
 }

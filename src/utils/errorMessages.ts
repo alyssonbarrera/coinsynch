@@ -16,4 +16,6 @@ export const errorMessages = {
   invalidCredentials: 'Invalid credentials',
 
   acceptTerms: 'You must accept the privacy policy and terms of user sign',
+
+  unexpectedError: 'An unexpected error has occurred. Please try again.',
 }

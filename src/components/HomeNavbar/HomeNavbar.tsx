@@ -1,6 +1,6 @@
 import dynamic from 'next/dynamic'
 import { Link } from 'react-scroll'
-import { ComponentProps, useState } from 'react'
+import { ComponentProps } from 'react'
 
 import { Logo } from '@/components/Logo'
 import { Button } from '@/components/Button'
@@ -11,6 +11,7 @@ import { ExchangeRateDTO } from '@/dtos/ExchangeRateDTO'
 
 import { MenuIcon } from '@/components/Icons/MenuIcon'
 import { useBreakpoint } from '@/hooks/useBreakpoint'
+import { useModal } from '@/hooks/useModal'
 
 const DropdownMenu = dynamic(
   () =>
@@ -53,8 +54,16 @@ export function HomeNavbar({
   ...props
 }: HomeNavbarProps) {
   const { isBelow768 } = useBreakpoint()
-  const [signInModalIsOpen, setSignInModalIsOpen] = useState(false)
-  const [signUpModalIsOpen, setSignUpModalIsOpen] = useState(false)
+
+  const { onOpen } = useModal()
+
+  const handleSignInModalOpenChange = () => {
+    onOpen('signin')
+  }
+
+  const handleSignUpModalOpenChange = () => {
+    onOpen('signup')
+  }
 
   return (
     <>
@@ -96,13 +105,13 @@ export function HomeNavbar({
         </div>
         <div className="hidden items-center gap-2 pr-4 md:flex md:pr-12 md:text-sm md:leading-5 xl:pr-28 5xl:pr-0">
           <Button.Root
-            onClick={() => setSignInModalIsOpen(true)}
+            onClick={handleSignInModalOpenChange}
             className="h-8 min-w-[6.25rem] max-w-[6.25rem] bg-transparent hover:bg-gray-50 hover:transition-colors"
           >
             <Button.Content className="text-color-base">Sign In</Button.Content>
           </Button.Root>
           <Button.Root
-            onClick={() => setSignUpModalIsOpen(true)}
+            onClick={handleSignUpModalOpenChange}
             className="h-8 min-w-[6.25rem] max-w-[6.25rem] flex-grow-0"
           >
             <Button.Content className="text-white">Sign Up</Button.Content>
@@ -113,15 +122,9 @@ export function HomeNavbar({
         </div>
       </nav>
 
-      <SignInModal
-        isModalOpen={signInModalIsOpen}
-        setIsModalOpen={setSignInModalIsOpen}
-      />
+      <SignInModal />
 
-      <SignUpModal
-        isModalOpen={signUpModalIsOpen}
-        setIsModalOpen={setSignUpModalIsOpen}
-      />
+      <SignUpModal />
     </>
   )
 }

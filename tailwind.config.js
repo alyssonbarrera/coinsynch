@@ -9,6 +9,7 @@ module.exports = {
     extend: {
       screens: {
         '5xl': '2560px',
+        'desktop-xl': '1440px',
       },
       fontSize: {
         xs: '0.75rem', // 12px
@@ -88,6 +89,14 @@ module.exports = {
         'input-shadow': '0px 12px 24px 0px rgba(0, 0, 0, 0.10)',
         'button-shadow': '0px 12px 24px 0px rgba(0, 0, 0, 0.10)',
         'modal-shadow': '0px 12px 24px 0px rgba(0, 0, 0, 0.10)',
+        'dropdown-shadow': '0px 0px 10px rgba(0, 0, 0, 0.05)',
+        'dashboard-nav': '0px 4px 8px 0px rgba(77, 77, 77, 0.10)',
+        'dashboard-card': '0px 8px 16px 0px rgba(0, 0, 0, 0.10)',
+        'dashboard-my-wallet-section': '0px 8px 16px 0px rgba(0, 0, 0, 0.10)',
+      },
+      dropShadow: {
+        'dashboard-nav': '0px 4px 8px rgba(77, 77, 77, 0.10)',
+        'dashboard-footer': '0px -4px 8px rgba(77, 77, 77, 0.10)',
       },
       gridTemplateColumns: {
         'home-nav-xl': '1fr 1fr minmax(0, 320px)',
@@ -147,6 +156,7 @@ module.exports = {
           'linear-gradient(180deg, rgba(255, 255, 255, 0.00) 0%, #F7F7F7 100%)',
         'home-wave-two': "url('../assets/shapes/wave-two.png')",
         'home-footer': 'linear-gradient(138deg, #FBAB34 0%, #AD721A 100%)',
+        'chart-grid': 'url("../assets/shapes/chart-grid.svg")',
       },
     },
   },
