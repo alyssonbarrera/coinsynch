@@ -3,6 +3,8 @@ export const errorMessages = {
   emailInvalid: 'Invalid email',
 
   passwordRequired: 'Password is required',
+  confirmPasswordRequired: 'Confirm password is required',
+
   passwordMin: 'Password is too short, minimum 8 characters',
   passwordMax: 'Password is too long, maximum 16 characters',
   passwordMatch: 'Passwords do not match',

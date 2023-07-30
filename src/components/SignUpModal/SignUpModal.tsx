@@ -34,8 +34,8 @@ export function SignUpModal() {
     onOpen('signin')
   }
 
-  const handleCloseSignInModal = () => {
-    onClose('signin')
+  const handleCloseSignUpModal = () => {
+    onClose('signup')
   }
 
   const {
@@ -59,7 +59,7 @@ export function SignUpModal() {
       await router.push('/dashboard')
 
       reset()
-      handleCloseSignInModal()
+      handleCloseSignUpModal()
     } catch (error) {
       if (error instanceof UserAlreadyExistsError) {
         toast.error(error.message)

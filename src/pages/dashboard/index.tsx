@@ -1,9 +1,7 @@
 import Head from 'next/head'
 import jwtDecode from 'jwt-decode'
 import { parseCookies } from 'nookies'
-
-import { UserDTO } from '@/dtos/UserDTO'
-import { withSSRAuth } from '@/utils/withSSRAuth'
+import { useEffect, useState } from 'react'
 
 import { Sidebar } from '@/components/Sidebar'
 import { Button } from '@/components/Button'
@@ -12,11 +10,12 @@ import { ChartCard } from '@/components/ChartCard'
 import { Wallet } from '@/components/Icons/Wallet'
 import { PageFooter } from '@/components/PageFooter'
 import { BalanceCard } from '@/components/BalanceCard'
+import { EmptyWallet } from '@/components/Icons/EmptyWallet'
 import { DashboardNavbar } from '@/components/DashboardNavbar'
 
+import { UserDTO } from '@/dtos/UserDTO'
+import { withSSRAuth } from '@/utils/withSSRAuth'
 import { setupAPIClient } from '@/services/api.core'
-import { EmptyWallet } from '@/components/Icons/EmptyWallet'
-import { useEffect, useState } from 'react'
 import { useBreakpoint } from '@/hooks/useBreakpoint'
 
 type DashboardProps = {

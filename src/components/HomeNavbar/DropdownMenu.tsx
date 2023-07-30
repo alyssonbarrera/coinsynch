@@ -1,5 +1,5 @@
-import { Link } from 'react-scroll'
 import dynamic from 'next/dynamic'
+import { scroller } from 'react-scroll'
 import * as RadixDropdownMenu from '@radix-ui/react-dropdown-menu'
 
 import { Button } from '@/components/Button'
@@ -42,6 +42,20 @@ export function DropdownMenu({ ...props }: DropdownMenuProps) {
     onOpen('signup')
   }
 
+  const handleAboutUs = () => {
+    scroller.scrollTo('about', {
+      smooth: true,
+      duration: 500,
+    })
+  }
+
+  const handleScrollToTopCryptos = () => {
+    scroller.scrollTo('top-cryptos', {
+      smooth: true,
+      duration: 500,
+    })
+  }
+
   return (
     <>
       <RadixDropdownMenu.Root {...props}>
@@ -60,24 +74,22 @@ export function DropdownMenu({ ...props }: DropdownMenuProps) {
             sideOffset={5}
           >
             <RadixDropdownMenu.Item className="h-8 text-center outline-none">
-              <Link
-                to="about"
-                smooth={true}
-                duration={500}
+              <button
                 className="flex h-full w-full cursor-pointer items-center justify-center text-color-base"
+                onClick={handleAboutUs}
+                aria-label="About us"
               >
                 About us
-              </Link>
+              </button>
             </RadixDropdownMenu.Item>
             <RadixDropdownMenu.Item className="h-8 text-center outline-none">
-              <Link
-                to="top-cryptos"
-                smooth={true}
-                duration={500}
+              <button
                 className="flex h-full w-full cursor-pointer items-center justify-center text-color-base"
+                onClick={handleScrollToTopCryptos}
+                aria-label="Top Cryptos"
               >
                 Top Cryptos
-              </Link>
+              </button>
             </RadixDropdownMenu.Item>
             <RadixDropdownMenu.Item className="outline-none">
               <Button.Root

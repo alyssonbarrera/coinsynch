@@ -32,8 +32,8 @@ export function SignInModal() {
     onOpen('signup')
   }
 
-  const handleCloseSignUpModal = () => {
-    onClose('signup')
+  const handleCloseSignInModal = () => {
+    onClose('signin')
   }
 
   const {
@@ -54,7 +54,7 @@ export function SignInModal() {
       await router.push('/dashboard')
 
       reset()
-      handleCloseSignUpModal()
+      handleCloseSignInModal()
     } catch (error) {
       if (error instanceof InvalidCredentialsError) {
         toast.error(error.message)

@@ -19,8 +19,7 @@ const password = z
 
 const passwordConfirmation = z
   .string()
-  .min(8, errorMessages.passwordMin)
-  .max(16, errorMessages.passwordMax)
+  .nonempty(errorMessages.confirmPasswordRequired)
 
 const acceptTerms = z.boolean().refine((data) => data === true, {
   message: errorMessages.acceptTerms,
@@ -29,13 +28,6 @@ const acceptTerms = z.boolean().refine((data) => data === true, {
 export const subscribeFormSchema = z.object({
   email,
 })
-
-const fields = {
-  name,
-  email,
-  password,
-  passwordConfirmation,
-}
 
 const registerSchema = z
   .object({
@@ -58,6 +50,13 @@ const signInSchema = z.object({
 const subscribeSchema = z.object({
   email,
 })
+
+const fields = {
+  name,
+  email,
+  password,
+  passwordConfirmation,
+}
 
 const schemas = {
   register: registerSchema,

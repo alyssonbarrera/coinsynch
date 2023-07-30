@@ -2,7 +2,7 @@ import { tv } from 'tailwind-variants'
 import { ComponentProps, ElementType } from 'react'
 
 const input = tv({
-  base: 'relative max-h-12 w-full max-w-sm rounded-md p-4 outline-none selection:bg-secondary-300 placeholder:text-base placeholder:text-secondary-400',
+  base: 'relative max-h-12 w-full md:text-base text-sm leading-5 max-w-sm rounded-md p-4 outline-none selection:bg-secondary-300 placeholder:md:text-base placeholder:text-sm placeholder:leading-5 placeholder:text-secondary-400 placeholder:text-opacity-50',
   variants: {
     type: {
       primary: 'bg-white shadow-input-shadow',

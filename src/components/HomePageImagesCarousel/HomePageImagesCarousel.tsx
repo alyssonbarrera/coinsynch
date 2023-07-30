@@ -5,13 +5,13 @@ import { FreeMode, Mousewheel } from 'swiper/modules'
 
 import { IconTag } from '@/components/IconTag'
 
-import manImage from '@/assets/images/man-image.png'
+import manImage from '@/assets/images/man-image.webp'
 import chartIcon from '@/assets/icons/chart-icon.svg'
 import cryptoIcon from '@/assets/icons/crypto-icon.svg'
 import bitcoinIcon from '@/assets/icons/bitcoin-icon.svg'
-import womanImage from '@/assets/images/woman-image.png'
+import womanImage from '@/assets/images/woman-image.webp'
 import devicesIcon from '@/assets/icons/devices-icon.svg'
-import womanPbImage from '@/assets/images/woman-pb-image.png'
+import womanPbImage from '@/assets/images/woman-pb-image.webp'
 
 import 'swiper/css/free-mode'
 
@@ -20,6 +20,7 @@ export function HomePageImagesCarousel() {
     <Swiper
       modules={[FreeMode, Mousewheel]}
       mousewheel={true}
+      passiveListeners={true}
       freeMode={true}
       slidesPerView="auto"
       direction="horizontal"

@@ -1,6 +1,6 @@
 /* eslint-disable react/no-unescaped-entities */
 import Image from 'next/image'
-import elephantImage from '@/assets/images/elephant.png'
+import elephantImage from '@/assets/images/elephant.webp'
 
 export function NewsCard() {
   return (

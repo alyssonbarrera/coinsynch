@@ -44,7 +44,7 @@ type AuthProviderProps = {
 
 const DEFAULT_IMAGE_URL = 'https://bit.ly/dan-abramov'
 
-let authChannel: BroadcastChannel
+let authChannel: BroadcastChannel | null = null
 
 export const AuthContext = createContext({} as AuthContextData)
 
@@ -67,7 +67,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const signOut = () => {
     auth.signOut()
     destroyCookie(undefined, '@coinsynch:token')
-    authChannel.postMessage('signOut')
+    authChannel?.postMessage('signOut')
     Router.push('/')
   }
 
@@ -156,6 +156,11 @@ export function AuthProvider({ children }: AuthProviderProps) {
             break
         }
       }
+    }
+
+    return () => {
+      authChannel?.close()
+      authChannel = null
     }
   }, [])
 

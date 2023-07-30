@@ -151,10 +151,10 @@ module.exports = {
         contentShow: 'contentShow 150ms cubic-bezier(0.16, 1, 0.3, 1)',
       },
       backgroundImage: {
-        'home-wave-one': "url('../assets/shapes/wave-one.png')",
+        'home-wave-one': "url('../assets/shapes/wave-one.webp')",
         'home-section-two':
           'linear-gradient(180deg, rgba(255, 255, 255, 0.00) 0%, #F7F7F7 100%)',
-        'home-wave-two': "url('../assets/shapes/wave-two.png')",
+        'home-wave-two': "url('../assets/shapes/wave-two.webp')",
         'home-footer': 'linear-gradient(138deg, #FBAB34 0%, #AD721A 100%)',
         'chart-grid': 'url("../assets/shapes/chart-grid.svg")',
       },

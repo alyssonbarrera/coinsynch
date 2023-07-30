@@ -4,14 +4,14 @@ import { ComponentProps } from 'react'
 
 import { Logo } from '@/components/Logo'
 import { Button } from '@/components/Button'
+import { MenuIcon } from '@/components/Icons/MenuIcon'
 import { PopularCryptos } from '@/components/PopularCryptos'
 
 import { CoinDTO } from '@/dtos/CoinDTO'
 import { ExchangeRateDTO } from '@/dtos/ExchangeRateDTO'
 
-import { MenuIcon } from '@/components/Icons/MenuIcon'
-import { useBreakpoint } from '@/hooks/useBreakpoint'
 import { useModal } from '@/hooks/useModal'
+import { useBreakpoint } from '@/hooks/useBreakpoint'
 
 const DropdownMenu = dynamic(
   () =>
@@ -21,25 +21,6 @@ const DropdownMenu = dynamic(
   {
     ssr: false,
     loading: () => <MenuIcon />,
-  },
-)
-
-const SignInModal = dynamic(
-  () =>
-    import('@/components/SignInModal/SignInModal').then(
-      (mod) => mod.SignInModal,
-    ),
-  {
-    ssr: false,
-  },
-)
-const SignUpModal = dynamic(
-  () =>
-    import('@/components/SignUpModal/SignUpModal').then(
-      (mod) => mod.SignUpModal,
-    ),
-  {
-    ssr: false,
   },
 )
 
@@ -71,7 +52,7 @@ export function HomeNavbar({
         {...props}
         className="grid grid-cols-home-nav-base place-items-end items-center gap-y-5 pt-5 sm:py-4 md:grid-cols-home-nav-md xl:grid-cols-home-nav-xl xl:justify-between xl:gap-x-10"
       >
-        <div className="flex w-full items-center gap-10 pl-4 md:pl-12 xl:pl-28 5xl:pl-0">
+        <div className="flex w-full items-center gap-10 pl-4 md:pl-12 xl:pl-28">
           <Logo className="w-[5.875rem] sm:w-auto" />
           <ul className="hidden gap-6 text-xs leading-4 md:flex md:text-sm md:leading-5">
             <li>
@@ -117,14 +98,10 @@ export function HomeNavbar({
             <Button.Content className="text-white">Sign Up</Button.Content>
           </Button.Root>
         </div>
-        <div className="flex pr-4 md:hidden">
+        <div className="flex min-h-[24px] min-w-[24px] pr-4 md:hidden">
           {isBelow768 && <DropdownMenu />}
         </div>
       </nav>
-
-      <SignInModal />
-
-      <SignUpModal />
     </>
   )
 }

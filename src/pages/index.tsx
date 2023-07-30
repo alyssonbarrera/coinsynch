@@ -1,18 +1,19 @@
 import { z } from 'zod'
 import Head from 'next/head'
 import dynamic from 'next/dynamic'
+import { Element } from 'react-scroll'
 import { toast } from 'react-hot-toast'
-import { GetServerSideProps } from 'next'
+import { GetStaticProps } from 'next/types'
 import { useEffect, useState } from 'react'
 import { ClipLoader } from 'react-spinners'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Controller, useForm, SubmitHandler } from 'react-hook-form'
 
-import { Plus } from '@/components/Plus'
 import { Form } from '@/components/Form'
 import { Input } from '@/components/Input'
 import { Button } from '@/components/Button'
 import { TextTag } from '@/components/TextTag'
+import { Plus } from '@/components/Icons/Plus'
 import { Highlight } from '@/components/Highlight'
 import { PageFooter } from '@/components/PageFooter'
 import { HomeNavbar } from '@/components/HomeNavbar'
@@ -25,6 +26,7 @@ import { exchangerate } from '@/services/api.exchangerate'
 import { CoinDTO } from '@/dtos/CoinDTO'
 import { ExchangeRateDTO } from '@/dtos/ExchangeRateDTO'
 
+import { useModal } from '@/hooks/useModal'
 import { useBreakpoint } from '@/hooks/useBreakpoint'
 import { userValidations } from '@/validations/userValidations'
 
@@ -103,23 +105,45 @@ const HomePageTopCryptosTable = dynamic(
   },
 )
 
-type HomeProps = {
-  popularCryptos: CoinDTO[]
-  exchangeRate: ExchangeRateDTO
-}
+const SignInModal = dynamic(
+  () =>
+    import('@/components/SignInModal/SignInModal').then(
+      (mod) => mod.SignInModal,
+    ),
+  {
+    ssr: false,
+  },
+)
+const SignUpModal = dynamic(
+  () =>
+    import('@/components/SignUpModal/SignUpModal').then(
+      (mod) => mod.SignUpModal,
+    ),
+  {
+    ssr: false,
+  },
+)
 
 const subscribeFormSchema = userValidations.schemas.subscribe
 
 type SubscribeFormSchema = z.infer<typeof subscribeFormSchema>
 
-export default function Home({ popularCryptos, exchangeRate }: HomeProps) {
+export default function Home() {
+  const { onOpen } = useModal()
   const { isAbove768, isBelow768 } = useBreakpoint()
   const [numberOfResults, setNumberOfResults] = useState(4)
+
+  const [popularCryptos, setPopularCryptos] = useState<CoinDTO[]>([])
+  const [exchangeRate, setExchangeRate] = useState<ExchangeRateDTO | object>({})
 
   let popularCryptosCopy = [...popularCryptos]
 
   if (popularCryptosCopy.length > numberOfResults) {
     popularCryptosCopy = popularCryptosCopy.slice(0, numberOfResults)
+  }
+
+  const handleOpenSignUpModal = () => {
+    onOpen('signup')
   }
 
   const {
@@ -154,11 +178,38 @@ export default function Home({ popularCryptos, exchangeRate }: HomeProps) {
     }
   }
 
-  useEffect(() => {
-    if (popularCryptos.length === 0 || !exchangeRate) {
+  const fetchPopularCryptosAndExchangeRate = async () => {
+    const promises = [
+      coingecko.get('/coins/markets', {
+        params: {
+          vs_currency: 'usd',
+          order: 'market_cap_desc',
+          per_page: 10,
+          page: 1,
+          sparkline: false,
+        },
+      }),
+      exchangerate.get('/latest/USD'),
+    ]
+
+    const responses = await Promise.allSettled(promises)
+
+    const coingeckoResponse =
+      responses[0].status === 'fulfilled' ? responses[0].value.data : []
+    const exchangerateResponse =
+      responses[1].status === 'fulfilled' ? responses[1].value.data : {}
+
+    if (coingeckoResponse.length === 0 || !exchangerateResponse) {
       toast.error('Error on loading data, please try again later.')
     }
-  }, [exchangeRate, popularCryptos.length])
+
+    setPopularCryptos(coingeckoResponse)
+    setExchangeRate(exchangerateResponse)
+  }
+
+  useEffect(() => {
+    fetchPopularCryptosAndExchangeRate()
+  }, [])
 
   return (
     <>
@@ -168,16 +219,16 @@ export default function Home({ popularCryptos, exchangeRate }: HomeProps) {
       <header className="mx-auto max-w-[2560px] font-base">
         <HomeNavbar
           popularCryptosData={popularCryptos}
-          exchangeRateData={exchangeRate}
+          exchangeRateData={exchangeRate as ExchangeRateDTO}
         />
       </header>
-      <main className="mx-auto flex max-w-[2560px] items-center justify-center px-6 pt-14 font-base md:justify-between md:pr-0 md:pt-[3.875rem] xl:pb-14 xl:pl-28 xl:pt-[6.25rem] 5xl:pl-0">
+      <main className="mx-auto flex max-w-[2560px] items-center justify-center px-6 pt-14 font-base md:justify-between md:pr-0 md:pt-[3.875rem] xl:pb-14 xl:pl-28 xl:pt-[6.25rem]">
         <section className="pr-0 xl:pr-0">
           <div className="mx-auto flex max-w-2xl flex-col gap-2 text-center md:mx-0 md:gap-4 md:text-left xl:max-w-[36.875rem] xl:gap-6">
-            <p className="text-xl font-bold leading-8 text-primary-500 md:text-3xl md:leading-10 xl:text-5xl xl:leading-10 xl:-tracking-px">
+            <p className="text-xl font-bold leading-7 text-primary-500 md:text-3xl md:leading-10 xl:text-5xl xl:leading-10 xl:-tracking-px">
               Lorem ipsum dolor sit amet, consectetur
             </p>
-            <p className="text-label max-w-md leading-6 text-color-base md:max-w-none md:text-base xl:text-xl xl:leading-8">
+            <p className="max-w-md text-sm leading-6 text-color-base md:max-w-none md:text-base xl:text-xl xl:leading-8">
               Lorem ipsum dolor sit amet, consectetur adipiscing elit ut
               aliquam, purus sit amet luctus venenatis, lectus magna fringilla
               urna, porttitor
@@ -187,6 +238,7 @@ export default function Home({ popularCryptos, exchangeRate }: HomeProps) {
             <Button.Root
               variant="primary"
               className="mx-auto h-8 max-w-[11.25rem] md:mx-0 md:h-12 md:max-w-[14.5rem] xl:max-w-[17.375rem]"
+              onClick={handleOpenSignUpModal}
             >
               <Button.Content className="text-sm font-normal uppercase leading-4 md:font-bold">
                 Sign Up Now
@@ -209,61 +261,76 @@ export default function Home({ popularCryptos, exchangeRate }: HomeProps) {
         <div>{isAbove768 && <HomePageImagesCarousel />}</div>
       </main>
 
-      <div className="h-[15.4375rem] w-full bg-home-wave-one bg-cover bg-top bg-no-repeat" />
+      <div className="-mt-10 h-[15.4375rem] w-full bg-home-wave-one bg-cover bg-center bg-no-repeat md:mt-0" />
 
-      <section className="bg-home-section-two pt-14 font-base md:space-y-10 md:px-12 md:py-20 xl:flex xl:flex-row-reverse xl:items-center xl:justify-between xl:pb-[8.125rem] xl:pl-28 xl:pt-[7.5rem]">
-        <div className="px-6 md:mx-auto md:mb-4 md:max-w-[30.875rem] md:px-0 xl:mx-0 xl:mb-0 xl:ml-8 xl:mr-28 xl:max-w-[25.5rem]">
-          <Highlight.Root>
-            <Highlight.SubHeading
-              as="h5"
-              text="Lorem ipsum"
-              className="mb-1 text-md xl:text-xl xl:leading-7"
-            />
-            <Highlight.Heading
-              as="h4"
-              text="Lorem ipsum"
-              className="mb-4 text-2xl leading-7 md:text-3xl md:leading-8 xl:text-4xl xl:leading-9 xl:-tracking-tight"
-            />
-            <Highlight.Description
-              text="Lorem ipsum dolor sit amet, consectetur adipiscing elit ut aliquam, purus sit amet luctus venenatis, lectus magna fringilla urna, porttitor"
-              className="md:text-md md:leading-6"
-            />
-          </Highlight.Root>
-
-          <Button.Root className="mx-auto mt-10 hidden h-12 max-w-[11rem] md:mx-0 xl:block">
-            <Button.Content className="font-normal">Sign up now</Button.Content>
-          </Button.Root>
-        </div>
-
-        {isBelow768 && <HomePageInfoCardsCarousel />}
-        {isAbove768 && <HomePageInfoCardWrapper />}
-      </section>
-
-      <section className="space-y-4 px-6 py-14 font-base md:py-20 xl:py-[7.5rem]">
-        <h3 className="text-center text-xl font-bold leading-8 text-color-base md:text-2xl xl:text-3xl xl:leading-8">
-          Top Cryptos
-        </h3>
-
-        {isBelow768 && (
-          <HomePageTopCryptosAccordion popularCryptos={popularCryptosCopy} />
-        )}
-
-        {isAbove768 && (
-          <HomePageTopCryptosTable popularCryptos={popularCryptosCopy} />
-        )}
-
-        <Button.Root
-          className="mx-auto mt-10 h-12 max-w-[11rem] bg-transparent hover:bg-transparent"
-          onClick={handleViewPopularCryptos}
+      <section>
+        <Element
+          name="about"
+          className="bg-home-section-two pt-14 font-base md:space-y-10 md:px-12 md:py-20 xl:flex xl:flex-row-reverse xl:items-center xl:justify-between xl:pb-[8.125rem] xl:pl-28 xl:pt-[7.5rem]"
         >
-          <Button.Content className="text-md font-normal leading-6 text-primary-500">
-            {numberOfResults === 4 ? 'View more' : 'View less'}
-          </Button.Content>
-          {numberOfResults === 4 && <Button.Icon icon={Plus} />}
-        </Button.Root>
+          <div className="px-6 md:mx-auto md:mb-4 md:max-w-[30.875rem] md:px-0 xl:mx-0 xl:mb-0 xl:ml-8 xl:mr-28 xl:max-w-[25.5rem]">
+            <Highlight.Root>
+              <Highlight.SubHeading
+                as="h5"
+                text="Lorem ipsum"
+                className="mb-1 text-md xl:text-xl xl:leading-7"
+              />
+              <Highlight.Heading
+                as="h4"
+                text="Lorem ipsum"
+                className="mb-4 text-2xl leading-7 md:text-3xl md:leading-8 xl:text-4xl xl:leading-9 xl:-tracking-tight"
+              />
+              <Highlight.Description
+                text="Lorem ipsum dolor sit amet, consectetur adipiscing elit ut aliquam, purus sit amet luctus venenatis, lectus magna fringilla urna, porttitor"
+                className="md:text-md md:leading-6"
+              />
+            </Highlight.Root>
+
+            <Button.Root
+              className="mx-auto mt-10 hidden h-12 max-w-[11rem] md:mx-0 xl:block"
+              onClick={handleOpenSignUpModal}
+            >
+              <Button.Content className="font-normal">
+                Sign up now
+              </Button.Content>
+            </Button.Root>
+          </div>
+
+          {isBelow768 && <HomePageInfoCardsCarousel />}
+          {isAbove768 && <HomePageInfoCardWrapper />}
+        </Element>
       </section>
 
-      <section className="relative z-0 flex min-h-[432px] flex-col items-center justify-between gap-10 bg-home-footer bg-cover bg-no-repeat px-6 py-14 font-base before:absolute before:inset-0 before:-z-10 before:h-full before:bg-home-wave-two before:bg-cover before:bg-right before:bg-no-repeat md:min-h-[412px] md:flex-row md:gap-8 md:px-12 md:py-0 xl:px-[13.5rem]">
+      <section>
+        <Element
+          name="top-cryptos"
+          className="space-y-4 px-6 py-14 font-base md:py-20 xl:py-[7.5rem]"
+        >
+          <h3 className="text-center text-xl font-bold leading-8 text-color-base md:text-2xl xl:text-3xl xl:leading-8">
+            Top Cryptos
+          </h3>
+
+          {isBelow768 && (
+            <HomePageTopCryptosAccordion popularCryptos={popularCryptosCopy} />
+          )}
+
+          {isAbove768 && (
+            <HomePageTopCryptosTable popularCryptos={popularCryptosCopy} />
+          )}
+
+          <Button.Root
+            className="mx-auto mt-10 h-12 max-w-[11rem] bg-transparent hover:bg-transparent"
+            onClick={handleViewPopularCryptos}
+          >
+            <Button.Content className="text-md font-normal leading-6 text-primary-500">
+              {numberOfResults === 4 ? 'View more' : 'View less'}
+            </Button.Content>
+            {numberOfResults === 4 && <Button.Icon icon={Plus} />}
+          </Button.Root>
+        </Element>
+      </section>
+
+      <section className="relative z-0 flex min-h-[432px] flex-col items-center justify-between gap-10 bg-home-footer bg-cover bg-no-repeat px-6 py-14 font-base before:absolute before:inset-0 before:-z-10 before:h-full before:bg-home-wave-two before:bg-cover before:bg-right before:bg-no-repeat md:min-h-[412px] md:flex-row md:gap-8 md:px-12 md:py-0 xl:px-[13.5rem] 5xl:px-28">
         <div className="w-full max-w-[24.0625rem]">
           <Highlight.Root>
             <Highlight.SubHeading
@@ -331,35 +398,15 @@ export default function Home({ popularCryptos, exchangeRate }: HomeProps) {
         </PageFooter.Content>
         <PageFooter.Logo />
       </PageFooter.Root>
+
+      <SignInModal />
+      <SignUpModal />
     </>
   )
 }
 
-export const getServerSideProps: GetServerSideProps = async () => {
-  const promises = [
-    coingecko.get('/coins/markets', {
-      params: {
-        vs_currency: 'usd',
-        order: 'market_cap_desc',
-        per_page: 10,
-        page: 1,
-        sparkline: false,
-      },
-    }),
-    exchangerate.get('/latest/USD'),
-  ]
-
-  const responses = await Promise.allSettled(promises)
-
-  const coingeckoResponse =
-    responses[0].status === 'fulfilled' ? responses[0].value.data : []
-  const exchangerateResponse =
-    responses[1].status === 'fulfilled' ? responses[1].value.data : {}
-
+export const getStaticProps: GetStaticProps = async () => {
   return {
-    props: {
-      popularCryptos: coingeckoResponse,
-      exchangeRate: exchangerateResponse,
-    },
+    props: {},
   }
 }

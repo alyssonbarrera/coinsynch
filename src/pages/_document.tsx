@@ -9,6 +9,8 @@ export default function Document() {
           name="description"
           content="Lorem ipsum dolor sit amet, consectetur adipiscing elit ut aliquam, purus sit amet luctus venenatis, lectus magna fringilla urna, porttitor"
         />
+        <meta name="author" content="Alysson Barrera" />
+        <meta name="theme-color" content="#FFFFFF" />
 
         <meta property="og:type" content="website" />
         <meta
