@@ -98,8 +98,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
       setUser(user)
       saveTokenWithExpirationToCookie(token, tokenResult)
       setAuthorizationHeaderWithToken(token)
-
-      Router.push('/dashboard')
     } catch (error: any) {
       if (
         error.code === 'auth/user-not-found' ||

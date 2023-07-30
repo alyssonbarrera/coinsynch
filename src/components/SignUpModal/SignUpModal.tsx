@@ -1,5 +1,6 @@
 import { z } from 'zod'
 import { toast } from 'react-hot-toast'
+import { useRouter } from 'next/router'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Controller, SubmitHandler, useForm } from 'react-hook-form'
 
@@ -25,11 +26,16 @@ const signUpFormSchema = userValidations.schemas.register
 type SignUpFormSchema = z.infer<typeof signUpFormSchema>
 
 export function SignUpModal() {
+  const router = useRouter()
   const { signUp } = useAuth()
-  const { onOpen } = useModal()
+  const { onOpen, onClose } = useModal()
 
-  const handleOpenSignIpModal = () => {
+  const handleOpenSignInModal = () => {
     onOpen('signin')
+  }
+
+  const handleCloseSignInModal = () => {
+    onClose('signin')
   }
 
   const {
@@ -50,7 +56,10 @@ export function SignUpModal() {
 
       toast.success('Account created successfully!')
 
+      await router.push('/dashboard')
+
       reset()
+      handleCloseSignInModal()
     } catch (error) {
       if (error instanceof UserAlreadyExistsError) {
         toast.error(error.message)
@@ -69,7 +78,7 @@ export function SignUpModal() {
     >
       <Modal.Content>
         <Modal.CloseButton icon={X} />
-        <Modal.Title className="mb-6 text-center text-2xl leading-8 text-color-base">
+        <Modal.Title className="mb-6 text-center text-xl leading-7 text-color-base xl:text-2xl xl:leading-8">
           Sign up to <span className="font-bold text-primary-500">Coin</span>
           <span className="font-bold text-secondary-500">Synch</span>
         </Modal.Title>
@@ -195,7 +204,7 @@ export function SignUpModal() {
               )}
             />
 
-            <p className="text-sm leading-5 text-color-base">
+            <p className="text-xs leading-4 text-color-base md:text-sm md:leading-5">
               I have read and accept the{' '}
               <span className="font-bold">Privacy Policy</span>{' '}
               <span className="font-bold">Terms of User Sign.</span>{' '}
@@ -216,10 +225,10 @@ export function SignUpModal() {
           </Button.Root>
 
           <div className="text-center text-xs leading-4 text-color-base xl:text-sm xl:leading-5">
-            <span>Already have and account?</span>{' '}
+            <span className="hidden md:inline">Already have and account?</span>{' '}
             <button
               className="font-bold"
-              onClick={handleOpenSignIpModal}
+              onClick={handleOpenSignInModal}
               type="button"
               aria-label="Sign in"
             >

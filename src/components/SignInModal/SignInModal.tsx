@@ -1,9 +1,9 @@
 import { z } from 'zod'
 import toast from 'react-hot-toast'
+import { useRouter } from 'next/router'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Controller, SubmitHandler, useForm } from 'react-hook-form'
-
 import { userValidations } from '@/validations/userValidations'
+import { Controller, SubmitHandler, useForm } from 'react-hook-form'
 
 import { X } from '@/components/Icons/X'
 import { Form } from '@/components/Form'
@@ -24,11 +24,16 @@ const signInFormSchema = userValidations.schemas.signIn
 type SignInFormSchema = z.infer<typeof signInFormSchema>
 
 export function SignInModal() {
+  const router = useRouter()
   const { signIn } = useAuth()
-  const { onOpen } = useModal()
+  const { onOpen, onClose } = useModal()
 
   const handleOpenSignUpModal = () => {
     onOpen('signup')
+  }
+
+  const handleCloseSignUpModal = () => {
+    onClose('signup')
   }
 
   const {
@@ -46,8 +51,10 @@ export function SignInModal() {
   ) => {
     try {
       await signIn(data)
+      await router.push('/dashboard')
 
       reset()
+      handleCloseSignUpModal()
     } catch (error) {
       if (error instanceof InvalidCredentialsError) {
         toast.error(error.message)

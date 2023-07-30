@@ -3,10 +3,10 @@ import * as RadixDropdownMenu from '@radix-ui/react-dropdown-menu'
 import { Button } from '@/components/Button'
 import { Avatar } from '@/components/Avatar'
 import { Logout } from '@/components/Icons/Logout'
+import { ChevronDownIcon } from '@/components/Icons/ChevronDownIcon'
 
 import { UserDTO } from '@/dtos/UserDTO'
 import { useAuth } from '@/hooks/useAuth'
-import { ChevronDownIcon } from '../Icons/ChevronDownIcon'
 
 type DropdownMenuProps = {
   defaultOpen?: boolean
@@ -31,7 +31,7 @@ export function DropdownMenu({ user, ...props }: DropdownMenuProps) {
 
         <RadixDropdownMenu.Portal>
           <RadixDropdownMenu.Content
-            className="min-w-[220px] rounded-md bg-white p-[5px] text-xs leading-4 shadow-dropdown-shadow data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade data-[side=right]:animate-slideLeftAndFade data-[side=top]:animate-slideDownAndFade"
+            className="z-20 min-w-[220px] rounded-md bg-white p-[5px] text-xs leading-4 shadow-dropdown-shadow data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade data-[side=right]:animate-slideLeftAndFade data-[side=top]:animate-slideDownAndFade"
             sideOffset={5}
           >
             <RadixDropdownMenu.Item className="outline-none">
