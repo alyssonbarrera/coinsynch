@@ -26,8 +26,13 @@ export function formatCurrencyPriceToUSDWithSpace(value: number) {
   const formattedPrice = currencyFormatterToUSD
     .format(value)
     .replace('$', 'US$ ')
-
   return formattedPrice.replace(/[.,]/g, (match) => (match === '.' ? ',' : '.'))
+}
+
+export function formatCurrencyPriceToUSD(value: number) {
+  const formattedPrice = currencyFormatterToUSD.format(value)
+
+  return formattedPrice
 }
 
 export function formatPercentage(value: number) {

@@ -7,7 +7,10 @@ type TableTrProps = ComponentProps<'tr'> & {
 
 export function TableRow({ children, ...props }: TableTrProps) {
   return (
-    <tr {...props} className={twMerge('text-secondary-500', props.className)}>
+    <tr
+      {...props}
+      className={twMerge('h-full max-h-16 text-secondary-500', props.className)}
+    >
       {children}
     </tr>
   )

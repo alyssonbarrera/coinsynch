@@ -12,7 +12,7 @@ type SidebarProps = {
 }
 
 const sidebar = tv({
-  base: 'absolute left-0 z-10 top-16 h-[calc(100vh-128px)] border-y border-secondary-300 bg-secondary-900 bg-opacity-70 border-r xl:bg-transparent',
+  base: 'absolute left-0 z-10 top-16 min-h-[calc(100vh-128px)] border-y border-secondary-300 bg-secondary-900 bg-opacity-70 border-r xl:bg-transparent',
   variants: {
     isOpen: {
       true: 'flex animate-slideRightAndFade w-full xl:w-max',

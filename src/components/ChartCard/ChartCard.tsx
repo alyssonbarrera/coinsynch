@@ -2,7 +2,10 @@ import Image from 'next/image'
 import dynamic from 'next/dynamic'
 import { ApexOptions } from 'apexcharts'
 
+import { CoinDTO } from '@/dtos/CoinDTO'
 import bitcoinIcon from '@/assets/icons/bitcoin-icon.svg'
+import { formatPercentage } from '@/utils/currencyUtils'
+import classNames from 'classnames'
 
 const Chart = dynamic(() => import('react-apexcharts'), {
   ssr: false,
@@ -10,16 +13,18 @@ const Chart = dynamic(() => import('react-apexcharts'), {
 
 type ChartSeries = {
   name: string
-  data: number[]
+  data: Array<number[]>
 }
 
 type ChartCardProps = {
   chartSeries: ChartSeries[]
+  crypto: CoinDTO
 }
 
-export function ChartCard({ chartSeries }: ChartCardProps) {
+export function ChartCard({ chartSeries, crypto }: ChartCardProps) {
   const chartOptions: ApexOptions = {
     chart: {
+      offsetY: 30,
       toolbar: {
         show: false,
       },
@@ -79,8 +84,8 @@ export function ChartCard({ chartSeries }: ChartCardProps) {
         breakpoint: 648,
         options: {
           chart: {
-            offsetY: 10,
-            height: '60%',
+            offsetY: 20,
+            height: '70%',
           },
         },
       },
@@ -103,11 +108,20 @@ export function ChartCard({ chartSeries }: ChartCardProps) {
               className="h-4 w-4 sm:h-6 sm:w-6"
             />
             <p className="text-xs leading-4 text-color-base sm:text-sm sm:leading-5">
-              ETH
+              {crypto?.symbol.toUpperCase()}
             </p>
           </div>
-          <span className="text-sm leading-5 text-tertiary-700 sm:text-base">
-            +5,65%
+          <span
+            className={classNames(
+              'text-sm leading-5 sm:text-base',
+              crypto?.price_change_percentage_24h > 0
+                ? 'text-tertiary-700'
+                : 'text-quaternary-700',
+            )}
+          >
+            {crypto?.price_change_percentage_24h &&
+              formatPercentage(crypto.price_change_percentage_24h)}
+            %
           </span>
         </div>
       </div>

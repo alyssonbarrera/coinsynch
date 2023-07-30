@@ -1,10 +1,13 @@
 import Head from 'next/head'
+import dynamic from 'next/dynamic'
 import jwtDecode from 'jwt-decode'
 import { parseCookies } from 'nookies'
+import { toast } from 'react-hot-toast'
 import { useEffect, useState } from 'react'
+import { ClipLoader } from 'react-spinners'
 
-import { Sidebar } from '@/components/Sidebar'
 import { Button } from '@/components/Button'
+import { Sidebar } from '@/components/Sidebar'
 import { NewsCard } from '@/components/NewsCard'
 import { ChartCard } from '@/components/ChartCard'
 import { Wallet } from '@/components/Icons/Wallet'
@@ -14,26 +17,77 @@ import { EmptyWallet } from '@/components/Icons/EmptyWallet'
 import { DashboardNavbar } from '@/components/DashboardNavbar'
 
 import { UserDTO } from '@/dtos/UserDTO'
-import { withSSRAuth } from '@/utils/withSSRAuth'
-import { setupAPIClient } from '@/services/api.core'
+import { CoinDTO } from '@/dtos/CoinDTO'
+import { WalletDTO } from '@/dtos/WalletDTO'
+
 import { useBreakpoint } from '@/hooks/useBreakpoint'
+
+import { withSSRAuth } from '@/utils/withSSRAuth'
+import { coingecko } from '@/services/api.coingecko'
+import { setupAPIClient } from '@/services/api.core'
+
+const DashboardWalletTable = dynamic(
+  () =>
+    import('@/components/DashboardWalletTable').then(
+      (mod) => mod.DashboardWalletTable,
+    ),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="mx-auto h-full self-center">
+        <ClipLoader color="#FBAB34" />
+      </div>
+    ),
+  },
+)
+
+const DashboardCryptoCardWrapper = dynamic(
+  () =>
+    import('@/components/DashboardCryptoCardWrapper').then(
+      (mod) => mod.DashboardCryptoCardWrapper,
+    ),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="mx-auto h-full self-center">
+        <ClipLoader color="#FBAB34" />
+      </div>
+    ),
+  },
+)
 
 type DashboardProps = {
   user: UserDTO
+  popularCryptos: CoinDTO[]
+  marketData: {
+    prices: Array<number[]>
+    marketCaps: Array<number[]>
+    totalVolumes: Array<number[]>
+  }
 }
 
-export default function Dashboard({ user }: DashboardProps) {
-  const chartSeries = [
-    { name: 'series1', data: [31, 120, 10, 28, 51, 18, 109] },
-  ]
-
-  const { isAbove1280 } = useBreakpoint()
-
+export default function Dashboard({
+  user,
+  marketData,
+  popularCryptos,
+}: DashboardProps) {
+  const { isAbove1280, isAbove768, isBelow768 } = useBreakpoint()
   const [sidebarIsOpen, setSidebarIsOpen] = useState(false)
+
+  const chartSeries = [{ name: 'series1', data: marketData.prices }]
+  const balance = user.wallet
+    .map((wallet) => wallet.holding * wallet.coin.current_price)
+    .reduce((a, b) => a + b, 0)
 
   useEffect(() => {
     setSidebarIsOpen(isAbove1280)
   }, [isAbove1280])
+
+  useEffect(() => {
+    if (user?.wallet?.length === 0) {
+      toast.error('Error on loading data, please try again later.')
+    }
+  }, [user])
 
   return (
     <>
@@ -50,14 +104,17 @@ export default function Dashboard({ user }: DashboardProps) {
 
       <Sidebar isOpen={sidebarIsOpen} />
 
-      <main className="h-full min-h-[calc(100vh-128px)] bg-secondary-100 p-6 font-base sm:px-12 sm:pt-10 xl:ml-20 xl:px-16 xl:pt-14">
+      <main className="h-full min-h-[calc(100vh-128px)] p-6 font-base sm:px-12 sm:pt-10 md:bg-secondary-100 xl:ml-20 xl:px-16 xl:pt-14">
         <header className="flex flex-wrap items-center justify-between desktop-xl:flex-nowrap desktop-xl:space-x-8">
           <div className="mb-6 w-full desktop-xl:mb-0 desktop-xl:max-w-[37rem]">
-            <BalanceCard />
+            <BalanceCard balance={balance} />
           </div>
           <div className="flex w-full gap-8">
             <div className="flex-1">
-              <ChartCard chartSeries={chartSeries} />
+              <ChartCard
+                chartSeries={chartSeries}
+                crypto={user.wallet[0]?.coin || popularCryptos[0]}
+              />
             </div>
             <div className="flex-1 desktop-xl:min-w-[17.5rem]">
               <NewsCard />
@@ -65,8 +122,8 @@ export default function Dashboard({ user }: DashboardProps) {
           </div>
         </header>
 
-        <section className="mt-8 h-full rounded-lg bg-white shadow-dashboard-my-wallet-section">
-          <header className="flex justify-between border-b border-secondary-200 p-6">
+        <section className="mt-8 h-full border-t border-secondary-300 pt-6 md:rounded-lg md:border-none md:bg-white md:shadow-dashboard-my-wallet-section">
+          <header className="flex justify-between pb-4 md:border-b md:border-secondary-200 md:p-6">
             <div className="flex gap-4">
               <Wallet />{' '}
               <h4 className="text-xl font-bold leading-7 text-color-base sm:text-2xl sm:leading-7">
@@ -84,18 +141,22 @@ export default function Dashboard({ user }: DashboardProps) {
             </Button.Root>
           </header>
 
-          <div className="flex h-[19.25rem] items-center justify-center">
-            <div className="flex flex-col items-center gap-6 text-center text-color-base">
-              <EmptyWallet />
-              <div className="space-y-2">
-                <h5 className="text-base font-bold md:text-xl md:leading-7">
-                  Nothing here yet...
-                </h5>
-                <p className="text-xs leading-4 md:text-sm md:leading-5">
-                  Add a crypto and start earning
-                </p>
+          <div className="flex min-h-[19.25rem] justify-center">
+            {user.wallet.length === 0 && (
+              <div className="flex h-full flex-col items-center gap-6 self-center text-center text-color-base">
+                <EmptyWallet />
+                <div className="space-y-2">
+                  <h5 className="text-base font-bold md:text-xl md:leading-7">
+                    Nothing here yet...
+                  </h5>
+                  <p className="text-xs leading-4 md:text-sm md:leading-5">
+                    Add a crypto and start earning
+                  </p>
+                </div>
               </div>
-            </div>
+            )}
+            {isAbove768 && <DashboardWalletTable wallet={user.wallet} />}
+            {isBelow768 && <DashboardCryptoCardWrapper wallet={user.wallet} />}
           </div>
         </section>
       </main>
@@ -140,9 +201,47 @@ export const getServerSideProps = withSSRAuth(async (context) => {
       }
     }
 
+    const promises = [
+      coingecko.get('/coins/markets', {
+        params: {
+          vs_currency: 'usd',
+          order: 'market_cap_desc',
+          per_page: 10,
+          page: 1,
+          sparkline: false,
+        },
+      }),
+      coingecko.get(`/coins/${user.wallet[0].crypto_id}/market_chart`, {
+        params: {
+          vs_currency: 'usd',
+          days: 2,
+        },
+      }),
+    ]
+
+    const responses = await Promise.allSettled(promises)
+
+    const coingeckoTopCryptosResponse =
+      responses[0].status === 'fulfilled' ? responses[0].value.data : []
+    const coingeckoMarketChartResponse =
+      responses[1].status === 'fulfilled' ? responses[1].value.data : []
+
+    if (coingeckoTopCryptosResponse.length > 0) {
+      user.wallet = user.wallet.map((wallet: WalletDTO) => {
+        return {
+          ...wallet,
+          coin: coingeckoTopCryptosResponse.find(
+            (crypto: CoinDTO) => crypto.symbol === wallet.symbol,
+          ),
+        }
+      })
+    }
+
     return {
       props: {
         user,
+        marketData: coingeckoMarketChartResponse,
+        popularCryptos: coingeckoTopCryptosResponse,
       },
     }
   } catch {

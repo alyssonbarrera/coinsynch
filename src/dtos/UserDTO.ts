@@ -1,3 +1,5 @@
+import { WalletDTO } from './WalletDTO'
+
 export type UserDTO = {
   id: string
   avatar: string
@@ -6,4 +8,5 @@ export type UserDTO = {
   isSubscribedToNewsletter: boolean
   created_at: Date
   firebase_id: string
+  wallet: WalletDTO[]
 }

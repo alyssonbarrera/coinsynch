@@ -93,6 +93,7 @@ module.exports = {
         'dashboard-nav': '0px 4px 8px 0px rgba(77, 77, 77, 0.10)',
         'dashboard-card': '0px 8px 16px 0px rgba(0, 0, 0, 0.10)',
         'dashboard-my-wallet-section': '0px 8px 16px 0px rgba(0, 0, 0, 0.10)',
+        'dashboard-crypto-card': '0px 4px 8px 0px rgba(0, 0, 0, 0.10)',
       },
       dropShadow: {
         'dashboard-nav': '0px 4px 8px rgba(77, 77, 77, 0.10)',

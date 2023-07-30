@@ -6,7 +6,7 @@ export function Balance({ ...props }: BalanceProps) {
   return (
     <svg
       {...props}
-      className="h-5 h-7 w-5 w-7 xl:h-10 xl:w-10"
+      className="h-5 w-5 xl:h-10 xl:w-10"
       xmlns="http://www.w3.org/2000/svg"
       fill="none"
       viewBox="0 0 40 40"

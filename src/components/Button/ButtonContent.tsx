@@ -10,7 +10,7 @@ export function ButtonContent({ children, ...props }: ButtonContentProps) {
     <span
       {...props}
       className={twMerge(
-        'text-sm leading-4 text-white md:text-base',
+        'text-sm leading-5 text-white md:text-base',
         props.className,
       )}
     >

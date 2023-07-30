@@ -17,7 +17,7 @@ import { InvalidCredentialsError } from '@/services/errors/InvalidCredentialsErr
 
 import { saveTokenToCookie } from '@/utils/cookieUtils'
 
-type User = Omit<UserDTO, 'created_at' | 'id'>
+type User = Omit<UserDTO, 'created_at' | 'id' | 'wallet'>
 
 type SignInCredentials = {
   email: string

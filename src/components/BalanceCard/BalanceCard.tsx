@@ -1,6 +1,11 @@
+import { formatCurrencyPriceToUSD } from '@/utils/currencyUtils'
 import { Balance } from '../Icons/Balance'
 
-export function BalanceCard() {
+type BalanceCardProps = {
+  balance: number
+}
+
+export function BalanceCard({ balance }: BalanceCardProps) {
   return (
     <div className="flex h-12 w-full rounded-lg shadow-dashboard-card sm:h-28">
       <div className="flex w-full items-center gap-4 rounded-l-lg bg-white px-4 sm:p-6">
@@ -19,7 +24,7 @@ export function BalanceCard() {
       </div>
       <div className="flex w-full items-center justify-center rounded-r-lg bg-primary-100">
         <h3 className="text-base font-bold text-color-base sm:text-2xl sm:leading-7 xl:text-3xl xl:leading-8">
-          $32,256.56
+          {formatCurrencyPriceToUSD(balance || 0)}
         </h3>
       </div>
     </div>

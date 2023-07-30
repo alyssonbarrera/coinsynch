@@ -7,7 +7,7 @@ type TableContainerProps = ComponentProps<'table'> & {
 
 export function TableRoot({ children, ...props }: TableContainerProps) {
   return (
-    <table {...props} className={twMerge('min-w-full', props.className)}>
+    <table {...props} className={twMerge('h-full min-w-full', props.className)}>
       {children}
     </table>
   )
