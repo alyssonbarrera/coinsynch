@@ -9,10 +9,15 @@ body {
   font-family: 'Roboto', sans-serif;
 }
 
+body:is(.scroll-disabled) {
+  overflow: hidden;
+}
+
 body::-webkit-scrollbar {
   background-color: #ffffff;
   width: 5px;
 }
+
 body::-webkit-scrollbar-thumb {
   background-color: #FBAB34;
 }

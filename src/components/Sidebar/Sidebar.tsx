@@ -5,14 +5,16 @@ import { Chart } from '@/components/Icons/Chart'
 import { Crypto } from '@/components/Icons/Crypto'
 import { Wallet } from '@/components/Icons/Wallet'
 import { Bitcoin } from '@/components/Icons/Bitcoin'
-import { EclipseArrowLeft } from '../Icons/EclipseArrowLeft'
+import { EclipseArrowLeft } from '@/components/Icons/EclipseArrowLeft'
+import { useCallback, useEffect } from 'react'
+import { useBreakpoint } from '@/hooks/useBreakpoint'
 
 type SidebarProps = {
   isOpen?: boolean
 }
 
 const sidebar = tv({
-  base: 'absolute left-0 z-10 top-16 min-h-[calc(100vh-128px)] border-y border-secondary-300 bg-secondary-900 bg-opacity-70 border-r xl:bg-transparent',
+  base: 'fixed left-0 z-10 top-16 min-h-[calc(100vh-128px)] border-y border-secondary-300 bg-secondary-900 bg-opacity-70 border-r xl:bg-transparent',
   variants: {
     isOpen: {
       true: 'flex animate-slideRightAndFade w-full xl:w-max',
@@ -25,6 +27,24 @@ const sidebar = tv({
 })
 
 export function Sidebar({ isOpen }: SidebarProps) {
+  const { isAbove1280 } = useBreakpoint()
+
+  const handleScroll = useCallback(() => {
+    if (isOpen) {
+      document.body.classList.toggle('scroll-disabled', !isAbove1280)
+    } else {
+      document.body.classList.remove('scroll-disabled')
+    }
+  }, [isOpen, isAbove1280])
+
+  useEffect(() => {
+    handleScroll()
+
+    return () => {
+      document.body.classList.remove('scroll-disabled')
+    }
+  }, [isOpen, isAbove1280, handleScroll])
+
   return (
     <div className={sidebar({ isOpen })}>
       <nav className="flex w-[15rem] flex-col justify-between bg-white px-6 xl:w-20">

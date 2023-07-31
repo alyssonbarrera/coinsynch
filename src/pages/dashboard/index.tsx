@@ -105,7 +105,7 @@ export default function Dashboard({
         <title>Dashboard | CoinSynch</title>
       </Head>
 
-      <header className="font-base">
+      <header className="sticky top-0 font-base">
         <DashboardNavbar
           user={user}
           onOpenSidebar={() => setSidebarIsOpen((prevState) => !prevState)}
@@ -173,7 +173,7 @@ export default function Dashboard({
               </div>
             )}
             {isAbove768 && fetchWallet().length !== 0 && (
-              <div className="max-h-[23rem] w-full overflow-y-auto rounded-lg">
+              <div className="max-h-[31rem] w-full overflow-y-auto rounded-lg">
                 <DashboardWalletTable wallet={fetchWallet()} />
               </div>
             )}
