@@ -68,7 +68,7 @@ export function HomePageTopCryptosTable({
               {formatPercentage(crypto.price_change_percentage_24h)}%
             </Table.Cell>
             <Table.Cell>
-              <Table.Button>Buy</Table.Button>
+              <Table.Button buttonType="tertiary">Buy</Table.Button>
             </Table.Cell>
           </Table.Row>
         ))}
