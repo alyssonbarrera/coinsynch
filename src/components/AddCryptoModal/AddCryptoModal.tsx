@@ -1,25 +1,36 @@
-import { Controller, SubmitHandler, useForm } from 'react-hook-form'
-import { Form } from '../Form'
-import { Modal } from '../Modal'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { z } from 'zod'
-import { useModal } from '@/hooks/useModal'
 import { toast } from 'react-hot-toast'
-import { X } from '../Icons/X'
-import { Button } from '../Button'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { Controller, SubmitHandler, useForm } from 'react-hook-form'
 
-import { CoinDTO } from '@/dtos/CoinDTO'
-import { useAuth } from '@/hooks/useAuth'
-import { UserDTO } from '@/dtos/UserDTO'
+import { X } from '@/components/Icons/X'
+import { Form } from '@/components/Form'
+import { Modal } from '@/components/Modal'
 import { Input } from '@/components/Input'
+import { Button } from '@/components/Button'
 import { Select } from '@/components/Select'
+
+import { useAuth } from '@/hooks/useAuth'
+import { useModal } from '@/hooks/useModal'
+
 import { api } from '@/services/api.client'
 import { useWalletStore } from '@/store/walletStore'
 import { userValidations } from '@/validations/userValidations'
 
-const buyCryptoFormSchema = userValidations.schemas.buyCrypto
+import { CoinDTO } from '@/dtos/CoinDTO'
+import { UserDTO } from '@/dtos/UserDTO'
+import { WalletDTO } from '@/dtos/WalletDTO'
 
-type BuyCryptoFormSchema = z.infer<typeof buyCryptoFormSchema>
+import {
+  CreateUpdatedCryptoObjectDTO,
+  BuyCryptoFormSchema,
+  CreateCryptoBySelectedCryptoDTO,
+  CreateCryptoDTO,
+  GenerateCryptoPayloadDTO,
+  PerformApiRequestDTO,
+  PerformCryptoMethodBasedOnActionDTO,
+} from './types'
+
+const buyCryptoFormSchema = userValidations.schemas.buyCrypto
 
 type AddCryptoModalProps = {
   cryptos: CoinDTO[]
@@ -32,10 +43,6 @@ export function AddCryptoModal({ cryptos }: AddCryptoModalProps) {
   const { onClose } = useModal()
   const { addCrypto, getCrypto, updateCrypto } = useWalletStore()
 
-  const handleCloseAddCryptoModal = () => {
-    onClose('add-crypto')
-  }
-
   const {
     control,
     handleSubmit,
@@ -46,55 +53,186 @@ export function AddCryptoModal({ cryptos }: AddCryptoModalProps) {
     resolver: zodResolver(buyCryptoFormSchema),
   })
 
+  const handleCloseAddCryptoModal = () => {
+    onClose('add-crypto')
+  }
+
+  const performApiRequest = async ({
+    action,
+    user,
+    crypto,
+    api,
+  }: PerformApiRequestDTO) => {
+    const basePath = `/users/${user.id}/wallet`
+
+    const endpoint = {
+      create: basePath,
+      update: `${basePath}/${crypto.id}`,
+    }[action]
+
+    const payload = {
+      create: crypto,
+      update: { holding: crypto.holding },
+    }[action]
+
+    const apiMethod = {
+      create: api.post,
+      update: api.put,
+    }[action]
+
+    const { data: apiResponse } = await apiMethod(endpoint, payload)
+
+    return {
+      apiResponse,
+    }
+  }
+
+  const createUpdatedCryptoObject = ({
+    crypto,
+    apiResponse,
+    action,
+  }: CreateUpdatedCryptoObjectDTO) => {
+    const updatedCrypto = {
+      create: {
+        ...apiResponse,
+        coin: cryptos.find((c) => c.id === apiResponse.crypto_id),
+      },
+      update: {
+        ...crypto,
+        holding: apiResponse.holding,
+      },
+    }[action] as WalletDTO
+
+    return {
+      updatedCrypto,
+    }
+  }
+
+  const performCryptoMethodBasedOnAction = ({
+    action,
+    updatedCrypto,
+  }: PerformCryptoMethodBasedOnActionDTO) => {
+    if (action === 'create') {
+      addCrypto(updatedCrypto)
+    } else {
+      updateCrypto(updatedCrypto)
+    }
+  }
+
+  const coordinateCryptoAction = async (
+    action: 'create' | 'update',
+    crypto: CreateCryptoDTO | WalletDTO,
+  ) => {
+    try {
+      const { apiResponse } = await performApiRequest({
+        action,
+        user,
+        crypto,
+        api,
+      })
+
+      const { updatedCrypto } = createUpdatedCryptoObject({
+        crypto,
+        apiResponse,
+        action,
+      })
+
+      return performCryptoMethodBasedOnAction({
+        action,
+        updatedCrypto,
+      })
+    } catch (error: any) {
+      throw new Error(error.message)
+    }
+  }
+
+  const generateCryptoPayload = ({
+    crypto,
+    cryptoFound,
+  }: GenerateCryptoPayloadDTO) => {
+    const newCrypto = {
+      crypto_id: crypto.selectedCrypto,
+      holding: Number(crypto.cryptoQuantity),
+      symbol: cryptoFound?.symbol ?? null,
+      name: cryptoFound?.name ?? null,
+      id: cryptoFound?.id ?? '',
+    }
+
+    return newCrypto
+  }
+
+  const updateCryptoHoldingInWallet = async (
+    crypto: WalletDTO,
+    cryptoQuantity: number,
+  ) => {
+    const newHolding = crypto.holding + cryptoQuantity
+
+    await coordinateCryptoAction('update', {
+      ...crypto,
+      holding: newHolding,
+    })
+  }
+
+  const findCryptoByIdInCryptoList = (cryptoId: string) => {
+    return cryptos.find((crypto) => crypto.id === cryptoId)
+  }
+
+  const createNewCryptoBySelectedCrypto = async ({
+    cryptoQuantity,
+    selectedCrypto,
+    cryptoFound,
+  }: CreateCryptoBySelectedCryptoDTO) => {
+    const newCrypto = generateCryptoPayload({
+      crypto: {
+        cryptoQuantity,
+        selectedCrypto,
+      },
+      cryptoFound,
+    })
+
+    await coordinateCryptoAction('create', newCrypto)
+  }
+
+  const successSubmitAddCryptoForm = () => {
+    reset()
+    handleCloseAddCryptoModal()
+    toast.success('Crypto added successfully!')
+  }
+
+  const failedSubmitAddCryptoForm = (message: string) => {
+    toast.error(message)
+  }
+
   const onSubmitAddCryptoForm: SubmitHandler<BuyCryptoFormSchema> = async (
     data,
   ) => {
     try {
-      const cryptoAlreadyExists = getCrypto(data.cryptoSelect)
+      const selectedCryptoId = data.selectedCrypto
+      const selectedCrypto = getCrypto(selectedCryptoId)
+      const cryptoAlreadyExists = !!selectedCrypto
 
       if (cryptoAlreadyExists) {
-        const { data: responseData } = await api.put(
-          `/users/${user.id}/wallet/${cryptoAlreadyExists.id}`,
-          {
-            holding:
-              Number(cryptoAlreadyExists.holding) + Number(data.cryptoQuantity),
-          },
-        )
+        const selectedCryptoQuantity = Number(data.cryptoQuantity)
 
-        updateCrypto({
-          ...cryptoAlreadyExists,
-          holding: responseData.holding,
-        })
+        await updateCryptoHoldingInWallet(
+          selectedCrypto,
+          selectedCryptoQuantity,
+        )
       } else {
-        const cryptoData = cryptos.find(
-          (crypto) => crypto.id === data.cryptoSelect,
-        )
+        const cryptoFound = findCryptoByIdInCryptoList(selectedCryptoId)
 
-        const newCrypto = {
-          crypto_id: data.cryptoSelect,
-          holding: Number(data.cryptoQuantity),
-          symbol: cryptoData?.symbol,
-          name: cryptoData?.name,
+        const newCryptoData = {
+          ...data,
+          cryptoFound,
         }
 
-        const { data: responseData } = await api.post(
-          `/users/${user.id}/wallet`,
-          newCrypto,
-        )
-
-        const crypto = {
-          ...responseData,
-          coin: cryptos.find((crypto) => crypto.id === responseData.crypto_id),
-        }
-
-        addCrypto(crypto)
+        await createNewCryptoBySelectedCrypto(newCryptoData)
       }
 
-      reset()
-      handleCloseAddCryptoModal()
-      toast.success('Crypto added successfully!')
+      successSubmitAddCryptoForm()
     } catch (error: any) {
-      toast.error(error.message)
+      const errorMessage = error.message
+      failedSubmitAddCryptoForm(errorMessage)
     }
   }
 
@@ -117,7 +255,7 @@ export function AddCryptoModal({ cryptos }: AddCryptoModalProps) {
         >
           <div className="relative">
             <Controller
-              name="cryptoSelect"
+              name="selectedCrypto"
               defaultValue={''}
               control={control}
               render={({ field: { onChange, name } }) => (
@@ -131,9 +269,9 @@ export function AddCryptoModal({ cryptos }: AddCryptoModalProps) {
               )}
             />
 
-            {errors.cryptoSelect && (
+            {errors.selectedCrypto && (
               <Form.ErrorMessage className="mt-2">
-                {errors.cryptoSelect.message}
+                {errors.selectedCrypto.message}
               </Form.ErrorMessage>
             )}
           </div>

@@ -25,7 +25,7 @@ const acceptTerms = z.boolean().refine((data) => data === true, {
   message: errorMessages.acceptTerms,
 })
 
-const cryptoSelect = z.string().nonempty(errorMessages.cryptoSelect)
+const selectedCrypto = z.string().nonempty(errorMessages.selectedCrypto)
 
 const cryptoQuantity = z.string().nonempty(errorMessages.cryptoQuantity)
 
@@ -56,7 +56,7 @@ const subscribeSchema = z.object({
 })
 
 const buyCryptoSchema = z.object({
-  cryptoSelect,
+  selectedCrypto,
   cryptoQuantity,
 })
 
@@ -66,7 +66,7 @@ const fields = {
   password,
   passwordConfirmation,
   acceptTerms,
-  cryptoSelect,
+  selectedCrypto,
   cryptoQuantity,
 }
 

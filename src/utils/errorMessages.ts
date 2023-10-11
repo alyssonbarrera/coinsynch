@@ -21,7 +21,7 @@ export const errorMessages = {
 
   unexpectedError: 'An unexpected error has occurred. Please try again.',
 
-  cryptoSelect: 'Please select a crypto currency',
+  selectedCrypto: 'Please select a crypto currency',
 
   cryptoQuantity: 'Please enter a valid quantity',
 }
