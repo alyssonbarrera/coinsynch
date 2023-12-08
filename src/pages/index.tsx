@@ -114,6 +114,7 @@ const SignInModal = dynamic(
     ssr: false,
   },
 )
+
 const SignUpModal = dynamic(
   () =>
     import('@/components/SignUpModal/SignUpModal').then(
@@ -263,10 +264,10 @@ export default function Home() {
 
       <div className="-mt-10 h-[15.4375rem] w-full bg-home-wave-one bg-cover bg-center bg-no-repeat md:mt-0" />
 
-      <section>
+      <section className="bg-home-section-two">
         <Element
           name="about"
-          className="bg-home-section-two pt-14 font-base md:space-y-10 md:px-12 md:py-20 xl:flex xl:flex-row-reverse xl:items-center xl:justify-between xl:pb-[8.125rem] xl:pl-28 xl:pt-[7.5rem]"
+          className="mx-auto max-w-[2560px] pt-14 font-base md:space-y-10 md:px-12 md:py-20 xl:flex xl:flex-row-reverse xl:items-center xl:justify-between xl:pb-[8.125rem] xl:pl-28 xl:pt-[7.5rem]"
         >
           <div className="px-6 md:mx-auto md:mb-4 md:max-w-[30.875rem] md:px-0 xl:mx-0 xl:mb-0 xl:ml-8 xl:mr-28 xl:max-w-[25.5rem]">
             <Highlight.Root>
@@ -301,10 +302,10 @@ export default function Home() {
         </Element>
       </section>
 
-      <section>
+      <section className="mx-auto max-w-[2560px]">
         <Element
           name="top-cryptos"
-          className="space-y-4 px-6 py-14 font-base md:py-20 xl:py-[7.5rem]"
+          className="space-y-4 px-6 py-14 font-base md:py-20 xl:px-28 xl:py-[7.5rem]"
         >
           <h3 className="text-center text-xl font-bold leading-8 text-color-base md:text-2xl xl:text-3xl xl:leading-8">
             Top Cryptos
@@ -330,69 +331,71 @@ export default function Home() {
         </Element>
       </section>
 
-      <section className="relative z-0 flex min-h-[432px] flex-col items-center justify-between gap-10 bg-home-footer bg-cover bg-no-repeat px-6 py-14 font-base before:absolute before:inset-0 before:-z-10 before:h-full before:bg-home-wave-two before:bg-cover before:bg-right before:bg-no-repeat md:min-h-[412px] md:flex-row md:gap-8 md:px-12 md:py-0 xl:px-[13.5rem] 5xl:px-28">
-        <div className="w-full max-w-[24.0625rem]">
-          <Highlight.Root>
-            <Highlight.SubHeading
-              text="Lorem ipsum"
-              as="h4"
-              className="mb-1 text-primary-200 md:text-xl xl:text-2xl xl:leading-8"
-            />
-            <Highlight.Heading
-              text="Lorem ipsum"
-              as="h3"
-              className="mb-4 text-2xl leading-8 text-white md:text-3xl md:leading-10 xl:text-4xl xl:leading-9"
-            />
-            <Highlight.Description
-              text="Lorem ipsum dolor sit amet, consectetur adipiscing elit ut aliquam, purus sit amet luctus venenatis, lectus magna fringilla urna, porttitor"
-              as="p"
-              className="text-base text-white"
-            />
-          </Highlight.Root>
-        </div>
-
-        <div className="w-full max-w-sm space-y-5">
-          <Form.Control
-            onSubmit={handleSubmit(onSubmitSubscribeForm)}
-            className="gap-4"
-          >
-            <div className="space-y-2">
-              <Input.Label>Email</Input.Label>
-              <Controller
-                name="email"
-                defaultValue={''}
-                control={control}
-                render={({ field: { onChange, value, name } }) => (
-                  <Input.Root
-                    name={name}
-                    type="email"
-                    placeholder="Email"
-                    onChange={onChange}
-                    value={value}
-                    className="h-10 md:h-auto"
-                    isInvalid={!!errors.email}
-                  />
-                )}
+      <section className="relative z-0 min-h-[432px] bg-home-footer bg-cover bg-no-repeat before:absolute before:inset-0 before:-z-10 before:h-full before:bg-home-wave-two before:bg-cover before:bg-right before:bg-no-repeat md:min-h-[412px]">
+        <div className="mx-auto flex min-h-[432px] max-w-[2560px] flex-col items-center justify-between gap-10 px-6 py-14 font-base md:min-h-[412px] md:flex-row md:gap-8 md:px-12 md:py-0 xl:px-[13.5rem] 5xl:px-28">
+          <div className="w-full max-w-[24.0625rem]">
+            <Highlight.Root>
+              <Highlight.SubHeading
+                text="Lorem ipsum"
+                as="h4"
+                className="mb-1 text-primary-200 md:text-xl xl:text-2xl xl:leading-8"
               />
-            </div>
+              <Highlight.Heading
+                text="Lorem ipsum"
+                as="h3"
+                className="mb-4 text-2xl leading-8 text-white md:text-3xl md:leading-10 xl:text-4xl xl:leading-9"
+              />
+              <Highlight.Description
+                text="Lorem ipsum dolor sit amet, consectetur adipiscing elit ut aliquam, purus sit amet luctus venenatis, lectus magna fringilla urna, porttitor"
+                as="p"
+                className="text-base text-white"
+              />
+            </Highlight.Root>
+          </div>
 
-            {errors.email && (
-              <Form.ErrorMessage>{errors.email.message}</Form.ErrorMessage>
-            )}
-
-            <Button.Root
-              type="submit"
-              variant="primary"
-              className="h-10 shadow-button-shadow md:h-12"
-              isLoading={isSubmitting}
+          <div className="w-full max-w-sm space-y-5">
+            <Form.Control
+              onSubmit={handleSubmit(onSubmitSubscribeForm)}
+              className="gap-4"
             >
-              <Button.Content>Subscribe</Button.Content>
-            </Button.Root>
-          </Form.Control>
+              <div className="space-y-2">
+                <Input.Label>Email</Input.Label>
+                <Controller
+                  name="email"
+                  defaultValue={''}
+                  control={control}
+                  render={({ field: { onChange, value, name } }) => (
+                    <Input.Root
+                      name={name}
+                      type="email"
+                      placeholder="Email"
+                      onChange={onChange}
+                      value={value}
+                      className="h-10 md:h-auto"
+                      isInvalid={!!errors.email}
+                    />
+                  )}
+                />
+              </div>
+
+              {errors.email && (
+                <Form.ErrorMessage>{errors.email.message}</Form.ErrorMessage>
+              )}
+
+              <Button.Root
+                type="submit"
+                variant="primary"
+                className="h-10 shadow-button-shadow md:h-12"
+                isLoading={isSubmitting}
+              >
+                <Button.Content>Subscribe</Button.Content>
+              </Button.Root>
+            </Form.Control>
+          </div>
         </div>
       </section>
 
-      <PageFooter.Root className="flex justify-center md:justify-between md:px-12 xl:px-28">
+      <PageFooter.Root className="mx-auto flex max-w-[2560px] justify-center md:justify-between md:px-12 xl:px-28">
         <PageFooter.Content className="hidden md:block">
           Copyright © 2022 - All rights reserved
         </PageFooter.Content>
