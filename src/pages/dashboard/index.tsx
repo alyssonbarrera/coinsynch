@@ -2,7 +2,6 @@ import Head from 'next/head'
 import dynamic from 'next/dynamic'
 import jwtDecode from 'jwt-decode'
 import { parseCookies } from 'nookies'
-import { toast } from 'react-hot-toast'
 import { useEffect, useState } from 'react'
 import { ClipLoader } from 'react-spinners'
 
@@ -259,11 +258,18 @@ export const getServerSideProps = withSSRAuth(async (context) => {
       wallet = user.wallet.map((wallet: WalletDTO) => {
         return {
           ...wallet,
-          coin: coingeckoTopCryptosResponse.find(
-            (crypto: CoinDTO) => crypto.id === wallet.crypto_id,
-          ),
+          coin:
+            coingeckoTopCryptosResponse.find(
+              (crypto: CoinDTO) => crypto.id === wallet.crypto_id,
+            ) || null,
         }
       })
+
+      const updatedWallet = wallet.filter((wallet: WalletDTO) => wallet.coin)
+
+      if (updatedWallet.length > 0) {
+        wallet = updatedWallet
+      }
     }
 
     user.wallet = wallet
